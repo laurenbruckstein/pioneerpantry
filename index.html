@@ -1,0 +1,136 @@
+<html>
+  <head>
+    <!--Link to CSS if needed @ later date-->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title style="text-align:center">Point Park Food Pantry</title>
+    <script src="jquery-3.1.1.min.js"></script>
+    <script>
+      $(function() {
+        console.log("Loaded JQuery!");
+
+        $("#submitButton").click(function() {
+          var storeData = {
+            "foodName": "",
+            "foodCount": "",
+            "foodGroup": "",
+            "foodType": "",
+            "foodDescription": "",
+            "foodDonor": "",
+            "foodDate": "",
+            "foodNotes": ""
+          };
+          var foodName = $("#field1").val();
+          var foodCount = $("#field2").val();
+          var foodGroup = $("input[type=radio][id=radiob]:checked" ).val();
+          var foodType =  $("#combo1 option:selected").text();
+          var foodDescription = $("#field5").val();
+          var foodDonor = $("#field6").val();
+          var foodDate = $("#field7").val();
+          var foodNotes = $("#field8").val();
+          storeData.foodName = foodName;
+          storeData.foodCount = foodCount;
+          storeData.foodGroup = foodGroup;
+          storeData.foodType = foodType;
+          storeData.foodDescription = foodDescription;
+          storeData.foodDonor = foodDonor;
+          storeData.foodDate = foodDate;
+          storeData.foodNotes = foodNotes;
+          console.log(storeData);
+
+           $("#field1L").val(foodName);
+           $("#field2L").val(foodCount);
+           $("#field3L").val(foodGroup);
+           $("#field4L").val(foodType);
+           $("#field5L").val(foodDescription);
+           $("#field6L").val(foodDonor);
+           $("#field7L").val(foodDate);
+           $("#field8L").val(foodNotes);
+        });
+
+        $("#removeButton").click(function() {
+          $("#field1L").val("");
+          $("#field2L").val("");
+          $("#field3L").val("");
+          $("#field4L").val("");
+          $("#field5L").val("");
+          $("#field6L").val("");
+          $("#field7L").val("");
+          $("#field8L").val("");
+        });
+      });
+
+
+      function showpage(page) {
+        $("#page1").css("display", "none");
+        $("#page2").css("display", "none");
+        if (page === 1) {
+          $("#page1").css("display", "block");
+          console.log("page1")
+        }
+        else if (page === 2) {
+          $("#page2").css("display", "block");
+          console.log("page2")
+        }
+      }
+
+    </script>
+  </head>
+  <body>
+    <div id="container">
+      <div id="header">
+      <h1 id="pageTitle">Pioneer Pantry</h1>
+      </div>
+      <div id="content">
+        <img id="logo" style="width:210px; height:170px" src="logoColored.png"></img>
+        <div id="main">
+          <button id="updateButton" href="javascript:void(0)" onclick="showpage(1)">Update<br>Inventory</button>
+          <br>
+          <button id="listButton" href="javascript:void(0)" onclick="showpage(2)" style=width:115px;>List Inventory</button>
+          <div id="page1" style="display:none;">
+        <div id="updateInventoryForm">
+            <h1 id="formhead">Update Inventory</h1>
+                  <label>Food Name<input type="text" name="field1" id="field1"/></label>
+                  <label>Count<input type="text" name="field2" id="field2"/></label>
+                  <label>Food Group</label>
+                  <label id="foodRadio">
+                    <input id="radiob" href="javascript:void(0)" type="radio" name="a" value="Breakfast">Breakfast
+                    <input id="radiob" href="javascript:void(0)" type="radio" name="a" value="Lunch">Lunch
+                    <input id="radiob" href="javascript:void(0)" type="radio" name="a" value="Dinner">Dinner
+                  </label>
+                  <label>Food Type</label>
+                  <select id="combo1" id="field4">
+                      <option value=""></option>
+                      <option value="Option A">Option A</option>
+                      <option value="Option B">Option B</option>
+                      <option value="Option C">Option C</option>
+                      <option value="other">Other</option>
+                    </select>
+                  <label>Description<textarea name="field4" id="field5"></textarea></label>
+                  <label>Donor<input type="text" name="field5" id="field6" /></label>
+                  <label>Date<input type="date" name="field6" id="field7" /></label>
+                  <label>Additonal Notes:<textarea name="field7" id="field8"></textarea></label>
+               <input id="submitButton" type="submit" value="Add Item(s)"/>
+          </div>
+        </div>
+        <div id="page2" style="display:none;">
+          <div id="listInventoryForm">
+              <h1 id="formhead">List Inventory</h1>
+                    <label>Food Name<input type="text" name="field1" id="field1L" readonly/></label>
+                    <label>Count<textarea name="field2" id="field2L" readonly></textarea></label>
+                    <label>Food Group<input type="text" name="field3" id="field3L" readonly/></label>
+                    <label>Food Type<input type="text" name="field4" id="field4L" readonly/></label>
+                    <label>Description<input type="text" name="field5" id="field5L" readonly/></label>
+                    <label>Donor<input type="text" name="field6" id="field6L" readonly/></label>
+                    <label>Date<input type="text" name="field6" id="field7L" readonly/></label>
+                    <label>Additional Notes<input type="text" name="field6" id="field8L" readonly/></label>
+                    <button id="removeButton">Remove Item</button>
+            </div>
+          </div>
+          <div id="footer">
+            <i>Copyright &copy 2017 Senior Project.</i>
+          </div>
+        </div>
+        </div>
+      </div>
+  </body>
+</html>
