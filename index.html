@@ -9,6 +9,8 @@
         console.log("Loaded JQuery!");
 
         $("#submitButton").click(function() {
+          $("#page1").css("display", "none");
+          $("#page2").css("display", "block");
           var storeData = {
             "foodName": "",
             "foodCount": "",
@@ -72,7 +74,6 @@
           console.log("page2")
         }
       }
-
     </script>
   </head>
   <body>
@@ -112,7 +113,7 @@
                <input id="submitButton" type="submit" value="Add Item(s)"/>
           </div>
         </div>
-        <div id="page2" style="display:none;">
+        <div id="page2" style="display:none">
           <div id="listInventoryForm">
               <h1 id="formhead">List Inventory</h1>
                     <label>Food Name<input type="text" name="field1" id="field1L" readonly/></label>
