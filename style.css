@@ -10,32 +10,56 @@ body {
    margin: 0;
  }
 
- #updateButton {
+ #predictButton {
+   box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+   font-weight: bold;
+   border-radius: 10px;
    float: left;
-   margin-left: 50px;
-   margin-top: -78px;
-   padding: 30px;
-   background: linear-gradient(green, black);
-   border-color: green;
+   margin-top: 5px;
+   margin-left: 175px;
+   background: linear-gradient(red, black);
+   border-color: red;
  }
 
- #listButton {
-   float: right;
-   margin-right: 50px;
-   margin-top: -95px;
+ #updateButton {
+   box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+   color: white;
+   font-weight: bold;
+   border-radius: 10px;
+   float: left;
+   margin-left: 50px;
+   margin-top: -128px;
    padding: 30px;
    background: linear-gradient(green, black);
-   border-color: green;
+   border-color: #006A2F;
+ }
+
+ #submitButton {
+	 margin-left:-14px;
+ }
+
+
+ #listButton {
+   box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+   color: white;
+   font-weight: bold;
+   border-radius: 10px;
+   float: right;
+   margin-right: 50px;
+   margin-top: -146px;
+   padding: 30px;
+   background: linear-gradient(green, black);
+   border-color: #006A2F;
  }
 
  #pageTitle {
-   color: rgba(0,0,0,.6);
+   color: #fff;
    text-shadow: 2px 2px 3px rgba(255,255,255,0.1);
    letter-spacing: 9px;
  }
 
  #main b {
-   color: #43ABC9;
+   color: #237923;
  }
 
  #container {
@@ -45,8 +69,9 @@ body {
  }
 
  #header {
-   padding-top: 10px;
+   padding: 10px;
    text-align: center;
+   width: 1200px;
  }
 
 
@@ -58,7 +83,7 @@ body {
 
  #main {
    width: 600px;
-   height: 600px;
+   height: 700px;
    /*border: solid white;*/
    margin-left: 310px;
  }
@@ -68,7 +93,9 @@ body {
  }
 
  #logo {
-   margin: 10 0 -40 500;
+   margin-left: 500px;
+   margin-top: 0px;
+   padding: 0;
  }
 
 
@@ -82,19 +109,19 @@ body {
  #updateInventoryForm {
     width:450px;
     padding:30px;
-    margin: 40px auto 0 auto;
+    margin: 0px auto 0 auto;
     background: #FFFFFF;
     border-radius: 15px;
 }
 
 #updateInventoryForm h1 {
-    background: #006400;
+    background: #006A2F;
     padding: 20px 30px 15px 30px;
-    margin: -30px -30px 30px -30px;
+    margin: -40px -30px 30px -30px;
     border-radius: 10px 10px 0 0;
     color: #ffffff;
     font: normal 30px serif;
-    box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+    box-shadow: inset 1px 2px 2px 3px rgba(255, 255, 255, 0.14);
     border: 2px solid #006400;
 }
 
@@ -121,7 +148,7 @@ body {
 #updateInventoryForm input[type="button"],
 #updateInventoryForm input[type="submit"],
 #updateInventoryForm input[type="submit"]:hover {
-    background: #006400;
+    background: #006A2F;
     padding: 8px 200px 8px 200px;
     border-radius: 15px;
     color: #ffffff;
@@ -131,7 +158,7 @@ body {
 }
 
 #updateInventoryForm input[type="submit"]:hover {
-    background: #007900;
+    background: #009543;
 }
 
 #butonDiv {
@@ -152,13 +179,13 @@ body {
 #listInventoryForm {
   width:450px;
   padding:30px;
-  margin: 40px auto;
+  margin: 0px auto;
   background: #FFFFFF;
   border-radius: 15px;
 }
 
 #listInventoryForm h1 {
-  background: #006400;
+  background: #006A2F;
   padding: 20px 30px 15px 30px;
   margin: -30px -30px 30px -30px;
   border-radius: 10px 10px 0 0;
@@ -181,7 +208,7 @@ body {
   box-sizing: border-box;
   width: 100%;
   padding: 8px;
-  border-radius: 6px;
+  border-radius: 5px;
   border: 2px solid #ffffff;
   box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 }
@@ -189,4 +216,40 @@ body {
 #radiob {
   color: red;
   font-size: 20px;
+}
+
+th {
+  font-weight: bold;
+  height: 25px;
+  box-shadow: inset 0px 3px 1px 0px rgba(255, 255, 255, 0.17);
+  background-color: #006A2F;
+}
+
+
+td {
+  /*background-color: white;*/
+  text-align: center;
+}
+
+table {
+  border: 2px solid #006A2F;
+  border-radius: 10px;
+  border-collapse: collapse;
+  overflow: hidden;
+  display: inline-block;
+  margin: 10px;
+
+}
+
+
+th, td {
+    border:solid black 1px;
+}
+
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #8CFAA9;
 }

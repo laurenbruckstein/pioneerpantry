@@ -1,137 +1,331 @@
+<!doctype html>
 <html>
-  <head>
-    <!--Link to CSS if needed @ later date-->
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <title style="text-align:center">Point Park Food Pantry</title>
-    <script src="jquery-3.1.1.min.js"></script>
-    <script>
-      $(function() {
-        console.log("Loaded JQuery!");
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title style="text-align:center">Point Park Food Pantry</title>
+  <script src="jquery-3.1.1.min.js"></script>
+  <meta charset="utf-8">
+<script>
+//list
+/*$(function() {
+  $.getJSON("inventory.json", function(data) {
+    // at this point data is contains the inventory data
+    $("body").append("Response: " + JSON.stringify(data));
+  });*/
 
-        $("#submitButton").click(function() {
-          $("#page1").css("display", "none");
-          $("#page2").css("display", "block");
-          var storeData = {
-            "foodName": "",
-            "foodCount": "",
-            "foodGroup": "",
-            "foodType": "",
-            "foodDescription": "",
-            "foodDonor": "",
-            "foodDate": "",
-            "foodNotes": ""
-          };
-          var foodName = $("#field1").val();
-          var foodCount = $("#field2").val();
-          var foodGroup = $("input[type=radio][id=radiob]:checked" ).val();
-          var foodType =  $("#combo1 option:selected").text();
-          var foodDescription = $("#field5").val();
-          var foodDonor = $("#field6").val();
-          var foodDate = $("#field7").val();
-          var foodNotes = $("#field8").val();
-          storeData.foodName = foodName;
-          storeData.foodCount = foodCount;
-          storeData.foodGroup = foodGroup;
-          storeData.foodType = foodType;
-          storeData.foodDescription = foodDescription;
-          storeData.foodDonor = foodDonor;
-          storeData.foodDate = foodDate;
-          storeData.foodNotes = foodNotes;
-          console.log(storeData);
+  $(function() {
+    $.getJSON("inventory.json", function(data) {
+      console.log(JSON.stringify(data));
+      for (var i = 0; i < data["data"].length; i++) {
+        var obj = data["data"][i];
+        console.log(JSON.stringify(obj));
+        var FoodName = obj["FoodName"];
+        var Count = obj["Count"];
+        var FoodGroup = obj["FoodGroup"];
+        var FoodType = obj["FoodType"];
+        var Description = obj["Description"];
+        var Donor = obj["Donor"];
+        var OrderDate = obj["OrderDate"];
+        var AdditonalNotes = obj["AdditonalNotes"];
+        $("#invTable").append("<tr><td>"+FoodName+"</td><td>"+Count+"</td><td>"+FoodGroup+"</td><td>"+FoodType+"</td><td>"+Description+"</td><td>"+Donor+"</td><td>"+OrderDate+"</td><td>"+AdditonalNotes+"</td></tr>");
+      }
+    });
 
-           $("#field1L").val(foodName);
-           $("#field2L").val(foodCount);
-           $("#field3L").val(foodGroup);
-           $("#field4L").val(foodType);
-           $("#field5L").val(foodDescription);
-           $("#field6L").val(foodDonor);
-           $("#field7L").val(foodDate);
-           $("#field8L").val(foodNotes);
-        });
+  console.log("Loaded JQuery!");
 
-        $("#removeButton").click(function() {
-          $("#field1L").val("");
-          $("#field2L").val("");
-          $("#field3L").val("");
-          $("#field4L").val("");
-          $("#field5L").val("");
-          $("#field6L").val("");
-          $("#field7L").val("");
-          $("#field8L").val("");
-        });
-      });
+  $("#submitButton").click(function() {
+    $("#page1").css("display", "none");
+    $("#page2").css("display", "block");
+    var storeData = {
+      "foodName": "",
+      "foodCount": "",
+      "foodGroup": "",
+      "foodType": "",
+      "foodDescription": "",
+      "foodDonor": "",
+      "foodDonorContact": "",
+      "foodDate": "",
+      "foodNotes": ""
+    };
+    var foodName = $("#field1").val();
+    var foodCount = $("#field2").val();
+    var foodGroup = $('input[name="frS"]:checked').val();
+    var foodDescription = $("#field5").val();
+    var foodDonor = $("#field6").val();
+    var foodDonorContact = $("#dc").val();
+    var foodDate = $("#field7").val();
+    var foodNotes = $("#field8").val();
+    storeData.foodName = foodName;
+    storeData.foodCount = foodCount;
+    storeData.foodGroup = foodGroup;
+    storeData.foodType = foodType;
+    storeData.foodDescription = foodDescription;
+    storeData.foodDonor = foodDonor;
+    storeData.foodDonorContact = foodDonorContact;
+    storeData.foodDate = foodDate;
+    storeData.foodNotes = foodNotes;
+    console.log(storeData);
+
+     $("#field1L").val(foodName);
+     $("#field2L").val(foodCount);
+     $("#field3L").val(foodGroup);
+     $("#field4L").val(foodType);
+     $("#field5L").val(foodDescription);
+     $("#field6L").val(foodDonor);
+     $("#dc").val(foodDonorContact);
+     $("#field7L").val(foodDate);
+     $("#field8L").val(foodNotes);
 
 
-      function showpage(page) {
-        $("#page1").css("display", "none");
-        $("#page2").css("display", "none");
-        if (page === 1) {
-          $("#page1").css("display", "block");
-          console.log("page1")
-        }
-        else if (page === 2) {
-          $("#page2").css("display", "block");
-          console.log("page2")
+     //Add to table
+     console.log("add record");
+     //WITHOUT SQL
+     /*$("#tableParent").parent().append("<tr><td>" + $("#field1").val() + "</td><td>" + $("#field2").val() + "</td>" +
+      "<td>" + $("#field3").val() + "</td><td>" + $("#field4").val() + "</td><td>" + $("#field5").val() + "</td><td>" +
+        $("#field6").val() + "</td><td>" + $("#field7").val() + "</td><td>" + $("#field8").val() + "</td><td></tr>");*/
+
+      $("#tableParent").parent().append("<tr><td>" + $("#field1").val() + "</td><td>" + $("#field2").val() + "</td>" +
+      "<td>" + $("#field3").val() + "</td><td>" + $("#field4").val() + "</td><td>" + $("#field5").val() + "</td><td>" +
+       $("#field6").val() + "</td><td>" + $("#field7").val() + "</td><td>" + $("#field8").val() + "</tr>");
+
+
+     //Clear update inventory fields
+     $("#field1").val("");
+     $("#field2").val("");
+     $("#field3").val("");
+     $("#field4").val("");
+     $("#field5").val("");
+     $("#field6").val("");
+     $("#field7").val("");
+     $("#field8").val("");
+  });
+
+  $("#removeButton").click(function() {
+    $("#field1L").val("");
+    $("#field2L").val("");
+    $("#field3L").val("");
+    $("#field4L").val("");
+    $("#field5L").val("");
+    $("#field6L").val("");
+    $("#field7L").val("");
+    $("#field8L").val("");
+  });
+});
+//update when we call add item
+//put in pantry index
+function updateInventory() {
+  $.ajax({
+    type: "POST",
+    url: "update-inventory.json",
+    data: {
+      "FoodName": $("#field1").val(),
+      "Count": $("#field2").val(),
+      "FoodGroup": $("#foodCombo").val(),
+      "Description": $("#field5").val(),
+      "Donor": $("#field6").val(),
+      "OrderDate": $("#field7").val(),
+      "AdditonalNotes": $("#field8").val()
+    },
+    success: function(data) {
+      console.log("successful post: " + JSON.stringify(data));
+    }
+  });
+
+}
+
+function showpage(page) {
+  $("#page1").css("display", "none");
+  $("#page2").css("display", "none");
+  if (page === 1) {
+    $("#page1").css("display", "block");
+    console.log("page1")
+  }
+  else if (page === 2) {
+    $("#page2").css("display", "block");
+    console.log("page2")
+  }
+}
+
+function predictions(){
+  showpage(2);
+  // Random Number (To estimate averages)
+  $("#tableParent").parent().append("<tr><td>" + "" + "</td><td>" + "" + "</td>" +
+  "<td>" + "" + "</td><td>" + "" + "</td><td>" + "" + "</td><td>" +
+   "" + "</td><td>" + "" + "</td><td>" + "" + "</tr>");
+   $("#tableParent").parent().append("<tr><td>" + "" + "</td><td>" + "" + "</td>" +
+   "<td>" + "" + "</td><td>" + "" + "</td><td>" + "" + "</td><td>" +
+    "" + "</td><td>" + "" + "</td><td>" + "" + "</tr>");
+  console.log("Predctions Made!")
+  var rng;
+  var plusOrMinus;
+  var summerAvg = 14;
+  var springAvg = 73;
+  var fallAvg = 54;
+  var foodName = ["Vegetables", "Chicken", "Tuna", "Granola Bars", "Cereal"];
+  var randFood;
+  var count;
+  var year = 2020;
+  var month = 01;
+  var day = 02;
+  var date;
+  //console.log(year)
+  while(year < 2021) {
+    var count = 0;
+    randFood = Math.floor(Math.random() * 5);
+    date = year + "-" + month + "-" + day;
+    //console.log(year)
+    //console.log(month)
+    //console.log(day)
+    if(day <= 25)
+    {
+      day += 7;
+    }
+    else if(month < 12){
+      day -= 24;
+      month++;
+    }
+    else{
+      year++;
+      break;
+    }
+
+    // SPRING
+    if(month >= 1 && month < 5){
+      rng = Math.floor(Math.random() * 27);
+      plusOrMinus = Math.floor(Math.random() * 3);
+
+      if(day <= 20 && plusOrMinus == 0 || plusOrMinus == 1){
+        count = springAvg - (rng - 8);
+        //No negatives
+        if(count < 0)
+        {
+          count = summerAvg + (rng);
         }
       }
-    </script>
-  </head>
-  <body>
-    <div id="container">
-      <div id="header">
-      <h1 id="pageTitle">Pioneer Pantry</h1>
+      else if(day <= 20 && plusOrMinus == 2)
+      count = springAvg + (rng + 5);
+
+      //End of month so more food required
+      else{
+        count = springAvg + (rng + 20);
+      }
+    }
+    // Summer
+    else if(month >= 5 && month < 8){
+      rng = Math.floor(Math.random() * 14);
+      plusOrMinus = Math.floor(Math.random() * 3);
+
+      if(day <= 20 && plusOrMinus == 0 || plusOrMinus == 1){
+        count = summerAvg - (rng - 7);
+        //No negatives
+        if(count < 0)
+        {
+          count = summerAvg + (rng);
+        }
+      }
+      else if(day <= 20 && plusOrMinus == 2)
+      count = summerAvg + (rng);
+
+      //End of month so more food required
+      else{
+        count = summerAvg + (rng + 8);
+      }
+    }
+
+    else {
+      rng = Math.floor(Math.random() * 54);
+      plusOrMinus = Math.floor(Math.random() * 3);
+
+      if(day <= 20 && plusOrMinus == 0 || plusOrMinus == 1){
+        count = summerAvg - (rng - 20);
+        //No negatives
+        if(count < 0)
+        {
+          count = summerAvg + (rng);
+        }
+      }
+      else if(day <= 20 && plusOrMinus == 2)
+      count = summerAvg + (rng);
+
+      //End of month so more food required
+      else{
+        count = summerAvg + (rng + 20);
+      }
+    }
+
+    //console.log("Date: " + date);
+    $("#tableParent").parent().append("<tr><td>" + foodName[randFood] + "</td><td>" + count + "</td>" +
+    "<td>" + " " + "</td><td>" + "Group A" + "</td><td>" + " " + "</td><td>" +
+     "PPU" + "</td><td>" + date + "</td><td>" + " " + "</tr>");
+  }
+}
+
+</script>
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+    <h1 id="pageTitle">Point Park University</h1>
+    </div>
+    <div id="content">
+      <img id="logo" style="width:210px; height:170px" src="logoColored.PNG"></img>
+      <div id="main">
+        <button id="updateButton" href="javascript:void(0)" onclick="showpage(1)">Update<br>Inventory</button>
+        <br>
+        <button id="listButton" href="javascript:void(0)" onclick="showpage(2)" style=width:115px;>List Inventory</button>
+        <div id="page1">
+      <div id="updateInventoryForm">
+          <h1 id="formhead">Update Inventory</h1>
+                <label>Food Name<input type="text" name="field1" id="field1"/></label>
+                <label>Count<input type="text" name="field2" id="field2"/></label>
+                <label>Food Group</label>
+                <select id="foodCombo" name="field3">
+                    <option value=""></option>
+                    <option value="Grains">Grains</option>
+                    <option value="Veg">Veg</option>
+                    <option value="Fruit">Fruit</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Meat">Meat</option>
+                  </select>
+                <label>Description<textarea name="field5" id="field5"></textarea></label>
+                <label>Donor<input type="text" name="field6" id="field6"/></label>
+                <label>Donor Contact<input type="text" name="dc" id="dc"/></label>
+                <label>Date<input type="date" name="field7" id="field7" /></label>
+                <label>Additonal Notes:<textarea name="field8" id="field8"></textarea></label>
+             <input id="submitButton" type="submit" value="Add Item(s)" href="javascript:void(0)" onclick="updateInventory()"/>
+             <button id="predictButton" href="javascript:void(0)" onclick="predictions()">Predict 2020</button>
+        </div>
       </div>
-      <div id="content">
-        <img id="logo" style="width:210px; height:170px" src="logoColored.png"></img>
-        <div id="main">
-          <button id="updateButton" href="javascript:void(0)" onclick="showpage(1)">Update<br>Inventory</button>
-          <br>
-          <button id="listButton" href="javascript:void(0)" onclick="showpage(2)" style=width:115px;>List Inventory</button>
-          <div id="page1" style="display:none;">
-        <div id="updateInventoryForm">
-            <h1 id="formhead">Update Inventory</h1>
-                  <label>Food Name<input type="text" name="field1" id="field1"/></label>
-                  <label>Count<input type="text" name="field2" id="field2"/></label>
-                  <label>Food Group</label>
-                  <label id="foodRadio">
-                    <input id="radiob" href="javascript:void(0)" type="radio" name="a" value="Breakfast">Breakfast
-                    <input id="radiob" href="javascript:void(0)" type="radio" name="a" value="Lunch">Lunch
-                    <input id="radiob" href="javascript:void(0)" type="radio" name="a" value="Dinner">Dinner
-                  </label>
-                  <label>Food Type</label>
-                  <select id="combo1" id="field4">
-                      <option value=""></option>
-                      <option value="Option A">Option A</option>
-                      <option value="Option B">Option B</option>
-                      <option value="Option C">Option C</option>
-                      <option value="other">Other</option>
-                    </select>
-                  <label>Description<textarea name="field4" id="field5"></textarea></label>
-                  <label>Donor<input type="text" name="field5" id="field6" /></label>
-                  <label>Date<input type="date" name="field6" id="field7" /></label>
-                  <label>Additonal Notes:<textarea name="field7" id="field8"></textarea></label>
-               <input id="submitButton" type="submit" value="Add Item(s)"/>
+      <div id="page2" style="display:none">
+        <!-- This is the OLD form -->
+        <!--<div id="listInventoryForm">
+            <!<h1 id="formhead">List Inventory</h1>
+                  <label>Food Name<input type="text" name="field1" id="field1L" readonly/></label>
+                  <label>Count<textarea name="field2" id="field2L" readonly></textarea></label>
+                  <label>Food Group<input type="text" name="field3" id="field3L" readonly/></label>
+                  <label>Food Type<input type="text" name="field4" id="field4L" readonly/></label>
+                  <label>Description<input type="text" name="field5" id="field5L" readonly/></label>
+                  <label>Donor<input type="text" name="field6" id="field6L" readonly/></label>
+                  <label>Date<input type="text" name="field6" id="field7L" readonly/></label>
+                  <label>Additional Notes<input type="text" name="field6" id="field8L" readonly/></label>
+                  <button id="removeButton">Remove Item</button>
           </div>
+        </div>-->
+        <table id="invTable" >
+
+          <tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Food Type</th>
+          <th id="colum">Desc.</th><th id="colum">Donor</th><th id="colum">Date</th><th id="colum">Notes</th></tr>
+          <!--<tr id="tableParent"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>-->
+      </table>
+        <div id="footer">
+          <i>Copyright &copy 2017 Senior Project.</i>
         </div>
-        <div id="page2" style="display:none">
-          <div id="listInventoryForm">
-              <h1 id="formhead">List Inventory</h1>
-                    <label>Food Name<input type="text" name="field1" id="field1L" readonly/></label>
-                    <label>Count<textarea name="field2" id="field2L" readonly></textarea></label>
-                    <label>Food Group<input type="text" name="field3" id="field3L" readonly/></label>
-                    <label>Food Type<input type="text" name="field4" id="field4L" readonly/></label>
-                    <label>Description<input type="text" name="field5" id="field5L" readonly/></label>
-                    <label>Donor<input type="text" name="field6" id="field6L" readonly/></label>
-                    <label>Date<input type="text" name="field6" id="field7L" readonly/></label>
-                    <label>Additional Notes<input type="text" name="field6" id="field8L" readonly/></label>
-                    <button id="removeButton">Remove Item</button>
-            </div>
-          </div>
-          <div id="footer">
-            <i>Copyright &copy 2017 Senior Project.</i>
-          </div>
-        </div>
-        </div>
+        <!--Food Pantry<br><br>
+        <a href="javascript:void(0)" onclick="updateInventory()">Update Inventory</a><input id="item">
+        <input id="countItem"><input id="groupItem"><input id="typeItem"><input id="descItem">
+        <input id="donorItem"><input id="dateItem"><input id="noteItem"><br><br>-->
       </div>
-  </body>
+      </div>
+    </div>
+</body>
 </html>
