@@ -1,0 +1,345 @@
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="student.css">
+  <title style="text-align:center">Point Park Food Pantry</title>
+  <script src="jquery-3.1.1.min.js"></script>
+  <meta charset="utf-8">
+<script>
+
+
+  $(function() {
+    $.getJSON("order.json", function(data) {
+      console.log(JSON.stringify(data));
+      for (var i = 0; i < data["data"].length; i++) {
+        var obj = data["data"][i];
+        console.log(JSON.stringify(obj));
+        var Student_ID = obj["STUDENT_ID"];
+        var OrderDate = obj["OrderDate"];
+        $("#studentTable").append("<tr><td>"+Student_ID+"</td><td>"+OrderDate+"</td></tr>");
+      }
+    });
+
+    // UPDATE ORDER
+    function updateOrder() {
+      $.ajax({
+        type: "POST",
+        url: "update-order.json",
+        data: {
+          "STUDENT_ID": $("#STUDENT_ID").val(),
+          "OrderDate": $("#foodDate").val()
+        },
+        success: function(data) {
+          console.log("successful post: " + JSON.stringify(data));
+        }
+      });
+    }
+
+  console.log("Loaded JQuery!");
+
+  $("#submitButton").click(function() {
+    $("#page1").css("display", "block");
+    var storeData = {
+      "studentID": "",
+      "foodCount": "",
+      "studentID": "",
+      "foodType": "",
+      "foodDescription": "",
+      "foodDonor": "",
+      "foodDonorContact": "",
+      "foodDate": "",
+    };
+    var studentID = $("#STUDENT_ID").val();
+    var foodGroup = $('input[name="frS"]:checked').val();
+    var foodDescription = $("#field5").val();
+    var foodCount = $("#field2").val();
+    var foodDonor = $("#field6").val();
+    var foodDonorContact = $("#dc").val();
+    var foodDate = $("#foodDate").val();
+    storeData.studentID = studentID;
+    storeData.foodDate = foodDate;
+    console.log(storeData);
+
+
+      $("#tableParent").parent().append("<tr><td>" + $("#STUDENT_ID").val() + "</td><td>" + $("#field2").val() + "</td>" +
+      "<td>" + $("#field3").val() + "</td><td>" + $("#field4").val() + "</td><td>" + $("#field5").val() + "</td><td>" +
+       $("#field6").val() + "</td><td>" + $("#foodDate").val() + "</td><td>" + $("#field8").val() + "</tr>");
+  });
+
+
+  $("#foodDate").change(function() {
+    $.getJSON("inventory.json", function(data) {
+      //console.log(JSON.stringify(data));
+      var matches = [];
+      for (var i = 0; i < data["data"].length; i++) {
+        var item = data["data"][i];
+        console.log("compare " + item.OrderDate + " to " + $("#foodDate").val());
+        if (item.OrderDate === $("#foodDate").val()) {
+          matches.push(item);
+        }
+      }
+      // TODO: build food group sections including select buttons
+      for (var i = 0; i < matches.length; i++) {
+        var item = matches[i];
+        var foodGroup = item.FoodGroup;
+        var foodName = item.FoodName;
+        var option = $("<option id='" + item.ID + "'>");
+        $("#"+foodGroup.toLowerCase()+"1ID").append(option);
+        option.append(foodName);
+        var option = $("<option id='" + item.ID + "'>");
+        $("#"+foodGroup.toLowerCase()+"2ID").append(option);
+        option.append(foodName);
+      }
+    });
+  });
+
+});
+
+
+function showpage(page) {
+  $("#page1").css("display", "none");
+  $("#page2").css("display", "none");
+  $("#page3").css("display", "none");
+  if (page === 1) {
+    $("#page1").css("display", "block");
+    console.log("page1")
+  }
+  else if (page === 2) {
+    $("#page1").css("display", "none");
+    console.log("page2")
+  }
+  else if (page === 3) {
+    $("#page3").css("display", "block");
+    console.log("page3")
+  }
+}
+
+function placeOrder() {
+  // Front End
+  showpage(3);
+  //alert("Order Placed!");
+
+  // TODO: iterate through groups and get IDs and put them in an array
+  // use jQuery to retrieve selected IDs as was done in example above
+  var itemIDs = [];
+  if ($("#grains1ID").val()) {
+   itemIDs.push($("#grains1ID").children(":selected").attr("id"));
+  }
+
+
+  // Back end
+  $.ajax({
+    type: "POST",
+    url: "update-order.json",
+    data: {
+      "studentId": $("#STUDENT_ID").val(),
+      "orderDate": $("#foodDate").val(),
+      "itemIDs": itemIDs
+    },
+    success: function(data) {
+      console.log("successful post: " + JSON.stringify(data));
+    }
+  });
+}
+//update when we call add item
+//put in pantry index
+
+
+</script>
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+    <h1 id="pageTitle"><a href="http://www.pointpark.edu/"><img src="logo1.0.png" alt="Point Park University" id="pageTitle"></a></h1>
+    </div>
+    <div id="content">
+      <img id="logo" style="width:210px; height:170px" src="logoColored.PNG"></img>
+      <div id="main">
+        <br>
+        <div id="page1">
+      <div id="updateInventoryForm">
+          <h1 id="formhead">Order Form</h1>
+                <label>Student ID No.<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
+                <label>Pickup Date<input type="date" name="foodDate" id="foodDate" /></label>
+                <label>Contact Info (For additional resources)<input type="text" name="dc" id="dc"/></label>
+                <br>
+                <label id="groupTitle">Milk Group</label>
+                <label>Selection 1</label>
+                <div id="MilkGroupDiv">
+                <select id="milkID" name="field3">
+                    <option value=""></option>
+                    <option value="Boxed shelf-stable Milk">Boxed shelf-stable Milk</option>
+                    <option value="Dry/Powedered Milk">Dry/Powedered Milk</option>
+                    <option value="Evaporated Milk">Evaporated Milk</option>
+                    <option value="Pudding Cups">Pudding Cups</option>
+                    <option value="Parmesan Cheese">Parmesan Cheese</option>
+                    <option value="Macaroni and Cheese">Macaroni and Cheese</option>
+                  </select>
+                </div>
+                  <label>Selection 2</label>
+                  <div id="MilkGroupDiv">
+                  <select id="milkID" name="field3">
+                      <option value=""></option>
+                      <option value="Boxed shelf-stable Milk">Boxed shelf-stable Milk</option>
+                      <option value="Dry/Powedered Milk">Dry/Powedered Milk</option>
+                      <option value="Evaporated Milk">Evaporated Milk</option>
+                      <option value="Pudding Cups">Pudding Cups</option>
+                      <option value="Parmesan Cheese">Parmesan Cheese</option>
+                      <option value="Macaroni and Cheese">Macaroni and Cheese</option>
+                    </select>
+                  </div>
+                    <label id="groupTitle">Grains Group</label>
+                    <label>Selection 1</label>
+                    <div id="grainGroupDiv">
+                    <select id="grains1ID" name="grains1ID">
+                        <option value=""></option>
+                        <option value="Oatmeal/Oats">Oatmeal/Oats</option>
+                        <option value="Granola Bars">Granola Bars</option>
+                        <option value="Crackers">Crackers</option>
+                        <option value="Pasta">Pasta</option>
+                        <option value="Cereals">Cereals</option>
+                        <option value="Cream of Wheat">Cream of Wheat</option>
+                        <option value="Rice & Brown Rice">Rice & Brown Rice</option>
+                        <option value="Popcorn">Popcorn</option>
+                        <option value="Taco Shells">Taco Shells</option>
+                      </select>
+                    </div>
+                    <label>Selection 2</label>
+                    <div id="grainGroupDiv">
+                    <select id="grains2ID" name="grains2ID">
+                        <option value=""></option>
+                        <option value="Oatmeal/Oats">Oatmeal/Oats</option>
+                        <option value="Granola Bars">Granola Bars</option>
+                        <option value="Crackers">Crackers</option>
+                        <option value="Pasta">Pasta</option>
+                        <option value="Cereals">Cereals</option>
+                        <option value="Cream of Wheat">Cream of Wheat</option>
+                        <option value="Rice & Brown Rice">Rice & Brown Rice</option>
+                        <option value="Popcorn">Popcorn</option>
+                        <option value="Taco Shells">Taco Shells</option>
+                      </select>
+                    </div>
+                        <label id="groupTitle">Protein Group</label>
+                        <label>Selection 1</label>
+                        <div id="proteinGroupDiv">
+                        <select id="proteinID" name="proteinID">
+                            <option value=""></option>
+                            <option value="Canned Tuna, Fish, Salmon & Crab">Canned Tuna, Fish, Salmon & Crab</option>
+                            <option value="Canned Chicken">Canned Chicken</option>
+                            <option value="Canned Bean soups">Canned Bean soups</option>
+                            <option value="Canned Baked Beans">Canned Baked Beans</option>
+                            <option value="Dried and Canned Beands or Peas">Dried and Canned Beands or Peas</option>
+                            <option value="Canned Beef Stew or Chili">Canned Beef Stew or Chili</option>
+                            <option value="Peanut Butter or other Nut Butters">Peanut Butter or other Nut Butters</option>
+                            <option value="Nuts & Seeds">Nuts & Seeds</option>
+                            <option value="Dried Beans">Dried Beans</option>
+                            <option value="Soups">Soups</option>
+                          </select>
+                        </div>
+                        <label>Selection 2</label>
+                        <div id="proteinGroupDiv">
+                        <select id="proteinID" name="proteinID">
+                            <option value=""></option>
+                            <option value="Canned Tuna, Fish, Salmon & Crab">Canned Tuna, Fish, Salmon & Crab</option>
+                            <option value="Canned Chicken">Canned Chicken</option>
+                            <option value="Canned Bean soups">Canned Bean soups</option>
+                            <option value="Canned Baked Beans">Canned Baked Beans</option>
+                            <option value="Dried and Canned Beands or Peas">Dried and Canned Beands or Peas</option>
+                            <option value="Canned Beef Stew or Chili">Canned Beef Stew or Chili</option>
+                            <option value="Peanut Butter or other Nut Butters">Peanut Butter or other Nut Butters</option>
+                            <option value="Nuts & Seeds">Nuts & Seeds</option>
+                            <option value="Dried Beans">Dried Beans</option>
+                            <option value="Soups">Soups</option>
+                          </select>
+                        </div>
+                            <label id="groupTitle">Fruit & Veg Group</label>
+                            <label>Selection 1</label>
+                            <div id="fruitDivGroupDiv">
+                            <select id="fvID" name="fvID">
+                                <option value=""></option>
+                                <option value="Canned Vegetables">Canned Vegetables</option>
+                                <option value="Vegetable Juices and Soups">Vegetable Juices and Soups</option>
+                                <option value="Diced Canned Tomatoes">Diced Canned Tomatoes</option>
+                                <option value="Tomato Juice and Sauce">Tomato Juice and Sauce</option>
+                                <option value="Spaghetti Sauce">Spaghetti Sauce</option>
+                                <option value="Salsa">Salsa</option>
+                                <option value="Boxed Potatoes">Boxed Potatoes</option>
+                                <option value="Canned Fruit">Canned Fruit</option>
+                                <option value="Fruit Juices">Fruit Juices</option>
+                                <option value="Dried Fruit">Dried Fruit</option>
+                                <option value="Shelf-stable fruit cups">Shelf-stable fruit cups</option>
+                                <option value="Applesauce">Applesauce</option>
+                                <option value="Raisins">Raisins</option>
+                                <option value="Jelly">Jelly</option>
+                              </select>
+                            </div>
+                              <label>Selection 2</label>
+                              <div id="fruitDivGroupDiv">
+                              <select id="fvID" name="fvID">
+                                  <option value=""></option>
+                                  <option value="Canned Vegetables">Canned Vegetables</option>
+                                  <option value="Vegetable Juices and Soups">Vegetable Juices and Soups</option>
+                                  <option value="Diced Canned Tomatoes">Diced Canned Tomatoes</option>
+                                  <option value="Tomato Juice and Sauce">Tomato Juice and Sauce</option>
+                                  <option value="Spaghetti Sauce">Spaghetti Sauce</option>
+                                  <option value="Salsa">Salsa</option>
+                                  <option value="Boxed Potatoes">Boxed Potatoes</option>
+                                  <option value="Canned Fruit">Canned Fruit</option>
+                                  <option value="Fruit Juices">Fruit Juices</option>
+                                  <option value="Dried Fruit">Dried Fruit</option>
+                                  <option value="Shelf-stable fruit cups">Shelf-stable fruit cups</option>
+                                  <option value="Applesauce">Applesauce</option>
+                                  <option value="Raisins">Raisins</option>
+                                  <option value="Jelly">Jelly</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label id="groupTitle">Other</label>
+                                <label>Selection 1</label>
+                                <select id="otherID" name="otherID">
+                                    <option value=""></option>
+                                    <option value="Snacks">Snacks</option>
+                                    <option value="Soda Pop">Soda Pop</option>
+                                    <option value="Candy">Candy</option>
+                                  </select>
+                                </div>
+                                <div>
+                                  <label>Selection 2</label>
+                                  <select id="otherID" name="otherID">
+                                      <option value=""></option>
+                                      <option value="Snacks">Snacks</option>
+                                      <option value="Soda Pop">Soda Pop</option>
+                                      <option value="Candy">Candy</option>
+                                    </select>
+                                  </div>
+             <input id="submitButton" type="submit" value="Submit Order" href="javascript:void(0)" onclick="placeOrder()"/>
+        </div>
+      </div>
+      <div id="page2" style="display:none">
+        <table id="invTable" >
+
+          <tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Food Type</th>
+          <th id="colum">Desc.</th><th id="colum">Donor</th><th id="colum">Date</th><th id="colum">Notes</th></tr>
+          <!--<tr id="tableParent"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>-->
+      </table>
+      </div>
+      <div id="page3" style="display:none">
+        <div id="updateInventoryForm">
+            <h1 id="formhead">Order Placed!</h1>
+                  <label>Student ID No.<input readonly type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
+                  <label>Pickup Date<input readonly type="date" name="foodDate" id="foodDate" /></label>
+                  <label>Contact Info (For additional resources)<input readonly type="text" name="dc" id="dc"/></label>
+                  <br>
+                  <label id="groupTitle">Some text</label>
+                  </div>
+          </div>
+        </div>
+      </div>
+        <div id="footer">
+          <i>Copyright &copy 2017 Senior Project.</i>
+        </div>
+
+      </div>
+    </div>
+</body>
+</html>
