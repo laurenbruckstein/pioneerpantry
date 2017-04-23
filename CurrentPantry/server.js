@@ -34,6 +34,9 @@ http.createServer(function(request, response) {
       else if (uri === "/remove-inventory.json") {
         removeInventoryJson(request, response);
       }
+      else if (uri === "/join-order.json") {
+        joinOrderJson(request, response);
+      }
       else {
         response.writeHead(404, {"Content-Type": "text/plain"});
         response.write("404 Not Found\n");
@@ -58,6 +61,38 @@ http.createServer(function(request, response) {
     });
   });
 }).listen(parseInt(port, 10));
+
+
+/*SELECT `ORDER`.STUDENT_ID, `ORDER`.DATE, INVENTORY.FoodGroup, INVENTORY.FoodName
+FROM `ORDER`, ORDER_ITEM, INVENTORY
+WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID;*/
+function joinOrderJson(request, response) {
+  // TODO: load inventory from database
+  var connection = mysql.createConnection({
+    host     : "db.it.pointpark.edu",
+    user     : "foodpantry",
+    password : "f5gkaHeUXqTzL8kq",
+    database : "foodpantry"
+  });
+  connection.connect();
+  connection.query("SELECT `ORDER`.STUDENT_ID, `ORDER`.DATE, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID", function(err, rows, fields) {
+    var json = {};
+    if (err) {
+      json["success"] = false;
+      json["message"] = "Query failed: " + err;
+    }
+    else {
+      //UNCOMMENT TO SEE ON WEBPAG
+      json["success"] = true;
+      json["message"] = "JOIN QUERY, Query successful";
+      json["data"] = rows;
+    }
+    response.writeHead(200, {"Content-Type": "text/json"});
+    response.write(JSON.stringify(json));
+    response.end();
+  });
+  connection.end();
+}
 
 function inventoryJson(request, response) {
   // TODO: load inventory from database

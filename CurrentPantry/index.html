@@ -44,6 +44,26 @@
   }
   getInventory();
 
+  function getOrderTable() {
+    $("#invTable").empty();
+    $("#invTable").append('<tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Description</th><th id="colum">Donor Name</th><th >Donor Organization</th><th>Donor Phone</th><th>Donor Email</th><th id="colum">Date</th><th id="colum">Notes</th><th id="colum">Remove</th></tr>');
+  $.getJSON("inventory.json", function(data) {
+    console.log(JSON.stringify(data));
+    for (var i = 0; i < data["data"].length; i++) {
+      (function(i) {
+        var obj = data["data"][i];
+        console.log(JSON.stringify(obj));
+        var studentID = obj["STUDENT_ID"];
+        var orderDate = obj["foodDate"];
+        var foodGroup = obj["foodCombo"];
+        var foodName = obj["foodName"];
+      $("#invTable").append("<tr><td>"+studentID+"</td><td>"+Count+"</td><td>"+orderDate+"</td><td>"+doodGroup+"</td><td>"+foodName+"</td></tr>");
+      })(i);
+    }
+  });
+}
+getOrderTable();
+
 $(function() {
   console.log("Loaded JQuery!");
 
@@ -127,6 +147,24 @@ $(function() {
     $("#field9L").val("");
   });
 });
+
+// JOIN ORDER TABLE
+function joinOrder() {
+  $.ajax({
+    type: "POST",
+    url: "join-order.json",
+    data: {
+      "STUDENT_ID": $("#STUDENT_ID").val(),
+      "OrderDate": $("#foodDate").val(),
+      "FoodGroup": $("#foodCombo").val(),
+      "FoodName": $("#foodName").val()
+    },
+    success: function(data) {
+      console.log("successful post: " + JSON.stringify(data));
+    }
+  });
+}
+
 //update when we call add item
 //put in pantry index
 function updateInventory() {
@@ -161,7 +199,6 @@ function removeInventory(id, cb) {
     url: "remove-inventory.json",
     data: {
       "ID": id
-
     },
     success: function(data) {
       console.log("successful post: " + JSON.stringify(data));
@@ -169,8 +206,6 @@ function removeInventory(id, cb) {
     }
   });
 }
-
-
 
 function showpage(page) {
   $("#page1").css("display", "none");
@@ -364,7 +399,7 @@ function predictions(){
 
       <div id="page3" style="display:none">
         <table id="studentTable" >
-          <tr id="studentParent"><th >ID</th><th id="colum">FoodName</th><th id="colum">Date</th><th id="colum">Contact</th></tr>
+          <tr id="studentParent"><th>Student_ID</th><th>OrderDate</th><th>FoodGroup</th><th>FoodName</th></tr>
       </table>
       </div>
 
