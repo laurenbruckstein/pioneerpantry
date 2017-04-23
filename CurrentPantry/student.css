@@ -1,0 +1,218 @@
+#page1, #page2, #page2{
+
+}
+body {
+   font-family: Arial, Helvetica, sans-serif;
+   background: #63831d;
+ }
+
+ h1, h2, h3 {
+   margin: 0;
+ }
+
+ #submitButton {
+	 margin-left:-14px;
+ }
+
+ #pageTitle {
+   margin-left: 0px;
+ }
+
+ #main b {
+   color: #237923;
+ }
+
+ #container {
+   width: 1200px;
+   margin-left: auto;
+   margin-right: auto;
+ }
+
+ #header {
+   padding: 10px;
+   text-align: center;
+   width: 1200px;
+ }
+
+ #content {
+   top-padding: 10px;
+   height: 770px;
+ }
+
+ #main {
+   width: 600px;
+   height: 700px;
+   /*border: solid white;*/
+   margin-left: 310px;
+ }
+
+ #main p {
+   letter-spacing: 0.5px;
+ }
+
+ #logo {
+   margin-left: 500px;
+   margin-top: 0px;
+   padding: 0;
+ }
+
+/*FORM*/
+#formhead{
+  text-align: center;
+}
+
+  /*UPDATE INVENTORY */
+ #updateInventoryForm {
+    width:450px;
+    padding:30px;
+    margin: 0px auto 0 auto;
+    background: #FFFFFF;
+    border-radius: 15px;
+}
+
+#updateInventoryForm h1 {
+    background: linear-gradient(white,lightgray);
+    padding: 20px 30px 15px 30px;
+    margin: -40px -30px 30px -30px;
+    border-radius: 10px 10px 0 0;
+    color: darkgreen;
+    font: 30px Arial;
+    text-shadow: 2px 2px 5px lightgrey;
+    box-shadow: inset 1px 2px 2px 3px rgba(255, 255, 255, 0.14);
+    border: 1px solid white;
+    border-bottom: 1px solid darkgreen;
+}
+
+#updateInventoryForm label {
+    display: block;
+    font: Arial;
+    margin-bottom: 5px;
+}
+#updateInventoryForm input[type="text"],
+#updateInventoryForm input[type="date"],
+#updateInventoryForm input[type="number"],
+#updateInventoryForm input[type="search"],
+#updateInventoryForm textarea,
+#updateInventoryForm select {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 8px;
+    border-radius: 6px;
+    border: 2px solid #ffffff;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
+
+#updateInventoryForm input[type="button"],
+#updateInventoryForm input[type="submit"],
+#updateInventoryForm input[type="submit"]:hover {
+  background: #63831d;
+  padding: 8px 200px 8px 200px;
+  border-radius: 15px;
+  color: #ffffff;
+  font: normal 15px Arial;
+  box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+  border: 1px solid #006400;
+  margin-left: -15px;
+}
+
+#updateInventoryForm input[type="submit"]:hover {
+    background: darkgreen;
+}
+
+#butonDiv {
+  position: relative;
+  top: 50px;
+  left: -550px;
+  right:auto;
+  bottom: auto;
+}
+
+#footer {
+  font-size: 12px;
+  text-align: center;
+  padding-top: 15px;
+  position: relative;
+}
+
+/*List INVENTORY */
+#listInventoryForm {
+  width:450px;
+  padding:30px;
+  margin: 0px auto;
+  background: #FFFFFF;
+  border-radius: 15px;
+}
+
+#listInventoryForm h1 {
+  background: #006A2F;
+  padding: 20px 30px 15px 30px;
+  margin: -30px -30px 30px -30px;
+  border-radius: 10px 10px 0 0;
+  color: #ffffff;
+  font: normal 30px Arial;
+  box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
+  border: 2px solid #006400;
+}
+
+#listInventoryForm label {
+  font: 13px Arial, Helvetica, sans-serif;
+  color: #888888;
+  margin-bottom: 5px;
+}
+#listInventoryForm input[type="text"],
+#listInventoryForm input[type="date"],
+#listInventoryForm input[type="number"],
+#listInventoryForm textarea
+ {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 2px solid #ffffff;
+  box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
+}
+
+#radiob {
+  color: red;
+  font-size: 20px;
+}
+
+th {
+  font-weight: bold;
+  height: 25px;
+  box-shadow: inset 0px 3px 1px 0px rgba(255, 255, 255, 0.17);
+  background-color: #006A2F;
+}
+
+td {
+  /*background-color: white;*/
+  text-align: center;
+}
+
+table {
+  border: 2px solid #006A2F;
+  border-radius: 10px;
+  border-collapse: collapse;
+  overflow: hidden;
+  display: inline-block;
+  margin: 10px;
+
+}
+
+th, td {
+    border:solid black 1px;
+}
+
+tr:nth-child(odd) {
+  background-color: white;
+}
+
+tr:nth-child(even) {
+  background-color: #8CFAA9;
+}
+
+#groupTitle {
+  font-size: 20px;
+  color: darkgreen;
+  font-weight: bold;
+}
