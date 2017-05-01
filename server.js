@@ -19,6 +19,24 @@ http.createServer(function(request, response) {
       else if (uri === "/update-inventory.json") {
         updateInventoryJson(request, response);
       }
+      else if (uri === "/order.json") {
+        orderJson(request, response);
+      }
+      else if (uri === "/update-order.json") {
+        updateOrderJson(request, response);
+      }
+      else if (uri === "/item.json") {
+        itemJson(request, response);
+      }
+      else if (uri === "/update-item.json") {
+        updateItemJson(request, response);
+      }
+      else if (uri === "/remove-inventory.json") {
+        removeInventoryJson(request, response);
+      }
+      else if (uri === "/join-order.json") {
+        joinOrderJson(request, response);
+      }
       else {
         response.writeHead(404, {"Content-Type": "text/plain"});
         response.write("404 Not Found\n");
@@ -43,6 +61,38 @@ http.createServer(function(request, response) {
     });
   });
 }).listen(parseInt(port, 10));
+
+
+/*SELECT `ORDER`.STUDENT_ID, `ORDER`.DATE, INVENTORY.FoodGroup, INVENTORY.FoodName
+FROM `ORDER`, ORDER_ITEM, INVENTORY
+WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID;*/
+function joinOrderJson(request, response) {
+  // TODO: load inventory from database
+  var connection = mysql.createConnection({
+    host     : "db.it.pointpark.edu",
+    user     : "foodpantry",
+    password : "f5gkaHeUXqTzL8kq",
+    database : "foodpantry"
+  });
+  connection.connect();
+  connection.query("SELECT `ORDER`.STUDENT_ID, `ORDER`.DATE, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID", function(err, rows, fields) {
+    var json = {};
+    if (err) {
+      json["success"] = false;
+      json["message"] = "Query failed: " + err;
+    }
+    else {
+      //UNCOMMENT TO SEE ON WEBPAG
+      json["success"] = true;
+      json["message"] = "JOIN QUERY, Query successful";
+      json["data"] = rows;
+    }
+    response.writeHead(200, {"Content-Type": "text/json"});
+    response.write(JSON.stringify(json));
+    response.end();
+  });
+  connection.end();
+}
 
 function inventoryJson(request, response) {
   // TODO: load inventory from database
@@ -92,7 +142,232 @@ function updateInventoryJson(request, response) {
         database : "foodpantry"
       });
       connection.connect();
-      connection.query("INSERT INTO INVENTORY (FoodName, Count, FoodGroup, FoodType, Description, Donor, OrderDate, AdditonalNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [json["FoodName"], json["Count"], json["FoodGroup"], json["FoodType"], json["Description"], json["Donor"], json["OrderDate"], json["AdditonalNotes"]], function(err, rows, fields) {
+      // THIS IS LINE 95 FROM NOTES
+      connection.query("INSERT INTO INVENTORY (FoodName, Count, FoodGroup, Description, DonorName, DonorOrganization, DonorPhone, DonorEmail, OrderDate, AdditonalNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [json["FoodName"], json["Count"], json["FoodGroup"], json["Description"], json["DonorName"], json["DonorOrganization"], json["DonorPhone"], json["DonorEmail"], json["OrderDate"], json["AdditonalNotes"]], function(err, rows, fields) {
+        var json = {};
+        if (err) {
+          json["success"] = false;
+          json["message"] = "Query failed: " + err;
+        }
+        else {
+          json["success"] = true;
+          json["message"] = "Query successful";
+        }
+        response.writeHead(200, {"Content-Type": "text/json"});
+        response.write(JSON.stringify(json));
+        response.end();
+      });
+      connection.end();
+    });
+  }
+}
+
+// Order
+function orderJson(request, response) {
+  // TODO: load inventory from database
+  var connection = mysql.createConnection({
+    host     : "db.it.pointpark.edu",
+    user     : "foodpantry",
+    password : "f5gkaHeUXqTzL8kq",
+    database : "foodpantry"
+  });
+  connection.connect();
+  connection.query("SELECT * FROM foodpantry.ORDER", function(err, rows, fields) {
+    var json = {};
+    if (err) {
+      json["success"] = false;
+      json["message"] = "Query failed: " + err;
+    }
+    else {
+      //UNCOMMENT TO SEE ON WEBPAG
+      json["success"] = true;
+      json["message"] = "Query successful";
+      json["data"] = rows;
+    }
+    response.writeHead(200, {"Content-Type": "text/json"});
+    response.write(JSON.stringify(json));
+    response.end();
+  });
+  connection.end();
+}
+
+// Update Order
+function updateOrderJson(request, response) {
+  if (request.method === "POST") {
+    var body = "";
+    request.on("data", function (data) {
+      body += data;
+      // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+      if (body.length > 1e6) {
+        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+        request.connection.destroy();
+      }
+    });
+    request.on("end", function () {
+      var json = qs.parse(body);
+      var connection = mysql.createConnection({
+        host     : "db.it.pointpark.edu",
+        user     : "foodpantry",
+        password : "f5gkaHeUXqTzL8kq",
+        database : "foodpantry"
+      });
+      connection.connect();
+      // THIS IS LINE 95 FROM NOTES
+      console.log(JSON.stringify(json));
+      var studentId = json["studentId"];
+      var orderDate = json["orderDate"];
+      var phone = json["phone"];
+      var email = json["email"];
+      var itemIDs = json["itemIDs[]"];
+      if (!Array.isArray(itemIDs)) {
+        itemIDs = [itemIDs];
+      }
+      console.log("studentId: " + studentId);
+      console.log("orderDate: " + orderDate);
+      console.log("phone: " + phone);
+      console.log("email: " + email);
+      console.log("These are the items in the order: ")
+      console.log("itemIDs: " + JSON.stringify(itemIDs));
+      connection.query("INSERT INTO foodpantry.ORDER (STUDENT_ID, DATE, PHONE, EMAIL) VALUES (?, ?, ?, ?)", [json["studentId"], json["orderDate"], json["phone"], json["email"]], function(err, rows, fields) {
+        var json = {};
+        if (err) {
+          json["success"] = false;
+          json["message"] = "Query failed: " + err;
+        }
+        else {
+          json["success"] = true;
+          json["message"] = "Query successful";
+        }
+        console.log("ORDER ID: " + rows.insertId);
+        var ncomplete = 0;
+        for (var i = 0; i < itemIDs.length; i++) {
+          connection.query("INSERT INTO foodpantry.ORDER_ITEM (ORDER_ID, INVENTORY_ID) VALUES (?, ?)", [rows["insertId"], itemIDs[i]], function(err, rows, fields) {
+            console.log(err);
+            ncomplete++;
+            if (ncomplete === itemIDs.length*2) {
+              connection.end();
+              response.writeHead(200, {"Content-Type": "text/json"});
+              response.write(JSON.stringify(json));
+              response.end();
+            }
+          });
+          connection.query("UPDATE foodpantry.INVENTORY SET Count = Count - 1 WHERE ID = ?", [itemIDs[i]], function(err, rows, fields) {
+            console.log(err);
+            ncomplete++;
+            if (ncomplete === itemIDs.length*2) {
+              connection.end();
+              response.writeHead(200, {"Content-Type": "text/json"});
+              response.write(JSON.stringify(json));
+              response.end();
+            }
+          });
+        }
+      });
+    });
+  }
+}
+
+
+// Order Items
+// Order
+function itemJson(request, response) {
+  var connection = mysql.createConnection({
+    host     : "db.it.pointpark.edu",
+    user     : "foodpantry",
+    password : "f5gkaHeUXqTzL8kq",
+    database : "foodpantry"
+  });
+  connection.connect();
+  connection.query("SELECT * FROM foodpantry.ORDER_ITEM", function(err, rows, fields) {
+    var json = {};
+    if (err) {
+      json["success"] = false;
+      json["message"] = "Query failed: " + err;
+    }
+    else {
+      json["success"] = true;
+      json["message"] = "Query successful";
+      json["data"] = rows;
+    }
+    response.writeHead(200, {"Content-Type": "text/json"});
+    response.write(JSON.stringify(json));
+    response.end();
+  });
+  connection.end();
+}
+
+// Update Order_Item
+function updateItemJson(request, response) {
+  if (request.method === "POST") {
+    var body = "";
+    request.on("data", function (data) {
+      body += data;
+      // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+      if (body.length > 1e6) {
+        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+        request.connection.destroy();
+      }
+    });
+    request.on("end", function () {
+      var json = qs.parse(body);
+      var connection = mysql.createConnection({
+        host     : "db.it.pointpark.edu",
+        user     : "foodpantry",
+        password : "f5gkaHeUXqTzL8kq",
+        database : "foodpantry"
+      });
+      connection.connect();
+      console.log(JSON.stringify(json));
+      var orderID = json["ID"];
+      var itemID = json["itemIDs"];
+      if (!Array.isArray(itemIDs)) {
+        itemIDs = [itemIDs];
+      }
+      console.log("orderDate: " + orderDate);
+      console.log("itemIDs: " + JSON.stringify(itemIDs));
+      connection.query("INSERT INTO foodpantry.ORDER_ITEM (STUDENT_ID, DATE) VALUES (?, ?)", [json["studentId"], json["ID"]], function(err, rows, fields) {
+console.log(err);
+        var json = {};
+        if (err) {
+          json["success"] = false;
+          json["message"] = "Query failed: " + err;
+        }
+        else {
+          json["success"] = true;
+          json["message"] = "Query successful";
+        }
+        response.writeHead(200, {"Content-Type": "text/json"});
+        response.write(JSON.stringify(json));
+        response.end();
+      });
+      connection.end();
+    });
+  }
+}
+
+function removeInventoryJson(request, response) {
+  if (request.method === "POST") {
+    var body = "";
+    request.on("data", function (data) {
+      body += data;
+      // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+      if (body.length > 1e6) {
+        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+        request.connection.destroy();
+      }
+    });
+    request.on("end", function () {
+      var json = qs.parse(body);
+      var connection = mysql.createConnection({
+        host     : "db.it.pointpark.edu",
+        user     : "foodpantry",
+        password : "f5gkaHeUXqTzL8kq",
+        database : "foodpantry"
+      });
+      connection.connect();
+
+      connection.query("DELETE FROM foodpantry.INVENTORY WHERE ID=?", [json["ID"]], function(err, rows, fields) {
+        console.log(err);
         var json = {};
         if (err) {
           json["success"] = false;
