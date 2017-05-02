@@ -14,7 +14,7 @@ body {
    color: #63831d;
    font-size: 12.5px;
    border-radius: 10px;
-   margin-left: 545px;
+   margin-left: 265px;
    padding: 7px;
    background: linear-gradient(white,lightgray);
  }
@@ -257,7 +257,11 @@ table {
   overflow: hidden;
   display: inline-block;
   margin: 10px;
+  margin-left: -150px;
+}
 
+#invTable {
+  margin-left: -30px;
 }
 
 
