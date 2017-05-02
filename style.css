@@ -260,8 +260,14 @@ table {
   margin-left: -150px;
 }
 
-#invTable {
-  margin-left: -30px;
+table invTable{
+  border: 2px solid #006A2F;
+  border-radius: 10px;
+  border-collapse: collapse;
+  overflow: hidden;
+  display: inline-block;
+  margin: 10px;
+  margin-left: -150px;
 }
 
 
