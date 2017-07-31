@@ -9,11 +9,12 @@ margin-left: 540px;
 #instructions {
   text-align: center;
   font-weight: bold;
+  font-size: 90%;
 }
 
 body {
    font-family: Arial, Helvetica, sans-serif;
-   background: #63831d;
+   //background: #63831d;
  }
 
  h1, h2, h3 {
@@ -78,6 +79,7 @@ body {
     margin: 0px auto 0 auto;
     background: #FFFFFF;
     border-radius: 15px;
+    border: 1px solid lightgray;
 }
 
 #updateInventoryForm h1 {
@@ -223,7 +225,7 @@ tr:nth-child(even) {
 
 #groupTitle {
   font-size: 20px;
-  color: darkgreen;
+  //color: darkgreen;
   font-weight: bold;
 }
 
