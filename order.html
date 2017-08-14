@@ -23,10 +23,8 @@
     });
     
     $.getJSON("order.json", function(data) {
-      console.log(JSON.stringify(data));
       for (var i = 0; i < data["data"].length; i++) {
         var obj = data["data"][i];
-        console.log(JSON.stringify(obj));
         var Student_ID = obj["STUDENT_ID"];
         var OrderDate = obj["OrderDate"];
         var phone = obj["PHONE"];
@@ -47,21 +45,20 @@
           "EMAIL": $("#dc").val()
         },
         success: function(data) {
-          console.log("successful post: " + JSON.stringify(data));
+        },
+        error: function (textStatus, errorThrown) {
+          alert("Could not update order!");
         }
       });
     }
 
     // Order Items
     $.getJSON("item.json", function(data) {
-      console.log(JSON.stringify(data));
       for (var i = 0; i < data["data"].length; i++) {
         var obj = data["data"][i];
-        console.log(JSON.stringify(obj));
         var Order_ID = obj["Order_ID"];
         var Item_ID = obj["Item_ID"];
         $("#studentTable").append("<tr><td>"+Order_ID+"</td><td>"+Item_ID+"</td></tr>");
-        console.log("item executed.")
       }
     });
 
@@ -75,8 +72,9 @@
           "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
         },
         success: function(data) {
-          console.log("successful post: " + JSON.stringify(data));
-          console.log("Update item executed.")
+        },
+        error: function (textStatus, errorThrown) {
+          alert("Could not update item!");
         }
       });
     }
@@ -104,7 +102,6 @@
     var foodDate = $("#foodDate").datepicker("getDate").toISOString().substr(0, 10);
     storeData.studentID = studentID;
     storeData.foodDate = foodDate;
-    console.log(storeData);
 
     // OLD PLACEORDER FUNCTION
     // Front End
@@ -156,7 +153,6 @@
      itemIDs.push($("#other2ID").children(":selected").attr("id"));
     }
 
-    console.log(itemIDs);
     // Back end
     $.ajax({
       type: "POST",
@@ -174,7 +170,6 @@
         "itemIDs": itemIDs
       },
       success: function(data) {
-        console.log("successful post: " + JSON.stringify(data));
         showpage(3);
       },
       error: function (textStatus, errorThrown) {
@@ -190,8 +185,9 @@
         "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
       },
       success: function(data) {
-        console.log("successful post: " + JSON.stringify(data));
-        console.log("Update item executed.")
+      },
+      error: function (textStatus, errorThrown) {
+        alert("Could not update item!");
       }
     });
 */
@@ -236,11 +232,9 @@
     $("#other2ID").empty();
     $("#other2ID").append("<option>None</option>");
     $.getJSON("inventory.json", function(data) {
-      //console.log(JSON.stringify(data));
       var matches = [];
       for (var i = 0; i < data["data"].length; i++) {
         var item = data["data"][i];
-        console.log("compare " + item.OrderDate + " to " + $("#foodDate").datepicker("getDate").toISOString().substr(0, 10));
         if (item.OrderDate === $("#foodDate").datepicker("getDate").toISOString().substr(0, 10); {
           matches.push(item);
         }
@@ -274,20 +268,16 @@ function showpage(page) {
   $("#page4").css("display", "none");
   if (page === 1) {
     $("#page1").css("display", "block");
-    console.log("page1")
   }
   else if (page === 2) {
     $("#page1").css("display", "none");
-    console.log("page2")
   }
   else if (page === 3) {
     $("#page3").css("display", "block");
-    console.log("page3")
   }
   else if (page === 4) {
     $("#page1").css("display", "block");
     $("#page4").css("display", "block");
-    console.log("page4")
   }
 }
 
@@ -422,7 +412,7 @@ function showpage(page) {
                 <br>
              <input id="submitButton" type="submit" value="Submit Order" href="javascript:void(0)" onclick=""/>
              <div id="footer">
-               <i>Copyright &copy 2017 Senior Project.</i>
+               <i>Copyright &copy; 2017 Senior Project.</i>
              </div>
            </div>
         </div>
