@@ -238,7 +238,7 @@ function updateOrderJson(request, response) {
       console.log("email: " + email);
       console.log("These are the items in the order: ")
       console.log("itemIDs: " + JSON.stringify(itemIDs));
-      connection.query("INSERT INTO foodpantry.ORDER (STUDENT_ID, DATE, PHONE, EMAIL, VETERAN, DISABLED, SNAP, HOUSEHOLD) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [studentId, orderDate, phone, email, veteran, disabled, snap, household], function(err, rows, fields) {
+      connection.query("INSERT INTO foodpantry.ORDER (STUDENT_ID, DATE, PHONE, EMAIL, VETERAN, DISABLED, SNAP, HOUSEHOLD) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [studentId, orderDate, phone, email, veteran, disabled, snap, household], function(err, rows, fields) {
         console.log(err);
         var json = {};
         if (err) {
