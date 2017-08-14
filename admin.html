@@ -136,7 +136,7 @@ console.log(color);
     url: "join-order.json",
     data: {
       "STUDENT_ID": $("#STUDENT_ID").val(),
-      "OrderDate": $("#foodDate").val(),
+      "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
       "FoodGroup": $("#foodCombo").val(),
       "FoodName": $("#foodName").val()
     },
@@ -181,7 +181,7 @@ $(function() {
     var foodDonorContactOrganization = $("#donorOrganization").val();
     var foodDonorContactPhone = $("#donorPhone").val();
     var foodDonorContactEmail = $("#donorEmail").val();
-    var foodDate = $("#foodDate").val();
+    var foodDate = $("#foodDate").datepicker("getDate").toISOString().substr(0, 10);
     var foodNotes = $("#foodNotes").val();
     storeData.foodName = foodName;
     storeData.foodCount = foodCount;

@@ -42,7 +42,7 @@
         url: "update-order.json",
         data: {
           "STUDENT_ID": $("#STUDENT_ID").val(),
-          "OrderDate": $("#foodDate").val(),
+          "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
           "PHONE": $("#phone").val(),
           "EMAIL": $("#dc").val()
         },
@@ -72,7 +72,7 @@
         url: "update-item.json",
         data: {
           "STUDENT_ID": $("#STUDENT_ID").val(),
-          "OrderDate": $("#foodDate").val()
+          "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
         },
         success: function(data) {
           console.log("successful post: " + JSON.stringify(data));
@@ -101,14 +101,14 @@
     var foodDonor = $("#field6").val();
     var foodDonorPhone = $("#phone").val();
     var foodDonorContact = $("#dc").val();
-    var foodDate = $("#foodDate").val();
+    var foodDate = $("#foodDate").datepicker("getDate").toISOString().substr(0, 10);
     storeData.studentID = studentID;
     storeData.foodDate = foodDate;
     console.log(storeData);
 
     // OLD PLACEORDER FUNCTION
     // Front End
-    showpage(3);
+    //showpage(3);
     //alert("Order Placed!");
 
     // TODO: iterate through groups and get IDs and put them in an array
@@ -163,7 +163,7 @@
       url: "update-order.json",
       data: {
         "studentId": $("#STUDENT_ID").val(),
-        "orderDate": $("#foodDate").val(),
+        "orderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
         "phone": $("#phone").val(),
         "email": $("#dc").val(),
         "veteran": $("#veteran").is(":checked"),
@@ -175,6 +175,10 @@
       },
       success: function(data) {
         console.log("successful post: " + JSON.stringify(data));
+        showpage(3);
+      },
+      error: function (textStatus, errorThrown) {
+        alert("Could not place order!");
       }
     });
 /*
@@ -183,7 +187,7 @@
       url: "update-item.json",
       data: {
         "STUDENT_ID": $("#STUDENT_ID").val(),
-        "OrderDate": $("#foodDate").val()
+        "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
       },
       success: function(data) {
         console.log("successful post: " + JSON.stringify(data));
@@ -236,8 +240,8 @@
       var matches = [];
       for (var i = 0; i < data["data"].length; i++) {
         var item = data["data"][i];
-        console.log("compare " + item.OrderDate + " to " + $("#foodDate").val());
-        if (item.OrderDate === $("#foodDate").val()) {
+        console.log("compare " + item.OrderDate + " to " + $("#foodDate").datepicker("getDate").toISOString().substr(0, 10));
+        if (item.OrderDate === $("#foodDate").datepicker("getDate").toISOString().substr(0, 10); {
           matches.push(item);
         }
       }
