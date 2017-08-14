@@ -81,7 +81,7 @@ function joinOrderJson(request, response) {
     database : "foodpantry"
   });
   connection.connect();
-  connection.query("SELECT `ORDER`.ID, `ORDER`.STUDENT_ID, `ORDER`.DATE, `ORDER`.VETERAN, `ORDER`.DISABLED, `ORDER`.SNAP, `ORDER`.INCOME, `ORDER`.HOUSEHOLD, `ORDER`.PACKAGED, `ORDER`.PICKEDUP, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID ORDER BY `ORDER`.ID DESC", function(err, rows, fields) {
+  connection.query("SELECT `ORDER`.ID, `ORDER`.STUDENT_ID, `ORDER`.DATE, `ORDER`.VETERAN, `ORDER`.DISABLED, `ORDER`.SNAP, `ORDER`.HOUSEHOLD, `ORDER`.PACKAGED, `ORDER`.PICKEDUP, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID ORDER BY `ORDER`.ID DESC", function(err, rows, fields) {
     var json = {};
     if (err) {
       json["success"] = false;
@@ -227,7 +227,6 @@ function updateOrderJson(request, response) {
       var veteran = json["veteran"] ? 1 : 0;
       var disabled = json["disabled"] ? 1 : 0;
       var snap = json["snap"] ? 1 : 0;
-      var income = json["income"];
       var household = json["household"];
       var itemIDs = json["itemIDs[]"];
       if (!Array.isArray(itemIDs)) {
@@ -239,7 +238,7 @@ function updateOrderJson(request, response) {
       console.log("email: " + email);
       console.log("These are the items in the order: ")
       console.log("itemIDs: " + JSON.stringify(itemIDs));
-      connection.query("INSERT INTO foodpantry.ORDER (STUDENT_ID, DATE, PHONE, EMAIL, VETERAN, DISABLED, SNAP, INCOME, HOUSEHOLD) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [studentId, orderDate, phone, email, veteran, disabled, snap, income, household], function(err, rows, fields) {
+      connection.query("INSERT INTO foodpantry.ORDER (STUDENT_ID, DATE, PHONE, EMAIL, VETERAN, DISABLED, SNAP, HOUSEHOLD) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", [studentId, orderDate, phone, email, veteran, disabled, snap, household], function(err, rows, fields) {
         console.log(err);
         var json = {};
         if (err) {

@@ -2,8 +2,10 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="stylesheet" type="text/css" href="jquery-ui/jquery-ui.min.css">
   <title style="text-align:center">Point Park Food Pantry</title>
   <script src="jquery-3.1.1.min.js"></script>
+  <script src="jquery-ui/jquery-ui.min.js"></script>
   <meta charset="utf-8">
 <script>
   // Jquery
@@ -144,7 +146,16 @@ console.log(color);
   });*/
 
 $(function() {
-  console.log("Loaded JQuery!");
+  $("#foodDate").datepicker({
+    beforeShowDay: function(date) {
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (date.getTime() >= today.getTime() && date.getDay() === 4) {
+        return [true, ""];
+      }
+      return [false, ""];
+    }
+  });
 
   // Press submit button emptys current form, and pushes entered data to database/table
   $("#submitButton").click(function() {
@@ -321,13 +332,14 @@ function showpage(page) {
                 <label>Count<input type="text" name="foodCount" id="foodCount"/></label>
                 <label>Food Group</label>
                 <select id="foodCombo" name="field3">
-                    <option value=""></option>
-                    <option value="Milk">Milk</option>
-                    <option value="Grains">Grains</option>
-                    <option value="Protein">Protein</option>
-                    <option value="FruitVeg">FruitVeg</option>
-                    <option value="Other">Other</option>
-                  </select>
+                  <option value=""></option>
+                  <option value="Milk">Milk</option>
+                  <option value="Grains">Grains</option>
+                  <option value="Protein">Protein</option>
+                  <option value="Fruit">Fruit</option>
+                  <option value="Vegetable">Vegetable</option>
+                  <option value="Other">Other</option>
+                </select>
                 <label>Description<textarea name="foodDescription" id="foodDescription"></textarea></label>
                 <label>Donor Name<input type="text" name="foodDonor" id="foodDonor"/></label>
                 <label>Donor Organization<input type="text" name="donorOrganization" id="donorOrganization"/></label>
