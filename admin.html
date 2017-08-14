@@ -15,11 +15,9 @@
       $("#invTable").empty();
       $("#invTable").append('<tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Description</th><th id="colum">Donor Name</th><th >Donor Organization</th><th>Donor Phone</th><th>Donor Email</th><th id="colum">Date</th><th id="colum">Notes</th><th id="colum">Remove</th></tr>');
     $.getJSON("inventory.json", function(data) {
-      console.log(JSON.stringify(data));
       for (var i = 0; i < data["data"].length; i++) {
         (function(i) {
           var obj = data["data"][i];
-          console.log(JSON.stringify(obj));
           var FoodName = obj["FoodName"];
           var Count = obj["Count"];
           var FoodGroup = obj["FoodGroup"];
@@ -37,8 +35,6 @@
                getInventory();
               });
             currentID = obj["ID"];
-            console.log(obj["ID"]);
-            console.log("Current ID is "  + currentID);
           });
         })(i);
       }
@@ -50,12 +46,10 @@
     $("#studentTable").empty();
     $("#studentTable").append('<tr id="tableParent"><th>OrderID</th><th>Student_ID</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Income</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th></tr>');
     $.getJSON("join-order.json", function(data) {
-      console.log(JSON.stringify(data));
       var color = "#8cfaa9";
       for (var i = 0; i < data["data"].length; i++) {
         (function(i) {
           var obj = data["data"][i];
-          console.log(JSON.stringify(obj));
           var orderID = obj["ID"];
           var studentID = obj["STUDENT_ID"];
           var orderDate = obj["DATE"].substring(0, 10);
@@ -90,7 +84,6 @@
             else {
               color = "#8cfaa9";
             }
-console.log(color);
             $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+orderDate+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+income+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td></tr>");
           }
           $("#packaged"+i).prop("checked", obj["PACKAGED"]);
@@ -103,8 +96,10 @@ console.log(color);
                 "Packaged": $("#packaged"+i).is(":checked")
               },
               success: function(data) {
-                console.log("successful post: " + JSON.stringify(data));
                 getOrderTable();
+              },
+              error: function (textStatus, errorThrown) {
+                alert("Could not package order!");
               }
             });
           });
@@ -118,8 +113,10 @@ console.log(color);
                 "Pickedup": $("#pickup"+i).is(":checked")
               },
               success: function(data) {
-                console.log("successful post: " + JSON.stringify(data));
                 getOrderTable();
+              },
+              error: function (textStatus, errorThrown) {
+                alert("Could not pickedup order!");
               }
             });
           });
@@ -141,7 +138,9 @@ console.log(color);
       "FoodName": $("#foodName").val()
     },
     success: function(data) {
-      console.log("successful post: " + JSON.stringify(data));
+    },
+    error: function (textStatus, errorThrown) {
+      alert("Could not join order!");
     }
   });*/
 
@@ -193,7 +192,6 @@ $(function() {
     storeData.foodDonorContactEmail = foodDonorContactEmail;
     storeData.foodDate = foodDate;
     storeData.foodNotes = foodNotes;
-    console.log(storeData);
 
      $("#foodNameL").val(foodName);
      $("#foodCountL").val(foodCount);
@@ -206,11 +204,7 @@ $(function() {
      $("#foodDateL").val(foodDate);
      $("#foodNotesL").val(foodNotes);
 
-
-
      //Add to table
-     console.log("add record");
-
      //Clear update inventory fields
      $("#foodName").val("");
      $("#foodCount").val("");
@@ -256,13 +250,15 @@ function updateInventory() {
       "DonorOrganization": $("#donorOrganization").val(),
       "DonorPhone": $("#donorPhone").val(),
       "DonorEmail": $("#donorEmail").val(),
-      "OrderDate": $("#foodDate").val(),
+      "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
       "AdditonalNotes": $("#foodNotes").val()
     },
     success: function(data) {
-      console.log("successful post: " + JSON.stringify(data));
       getInventory();
       showpage(2);
+    },
+    error: function (textStatus, errorThrown) {
+      alert("Could not update inventory!");
     }
   });
 
@@ -271,21 +267,20 @@ function updateInventory() {
 // Delete Queryfunction updateInventory() {
 function removeInventory(id, cb) {
   if(confirm("Are you sure you want to remove this row?")) {
-  $.ajax({
-    type: "POST",
-    url: "remove-inventory.json",
-    data: {
-      "ID": id
-    },
-    success: function(data) {
-      console.log("successful post: " + JSON.stringify(data));
-      cb();
-    }
-  });
-}
-else {
-  console.log("Remove was not completed.")
-}
+    $.ajax({
+      type: "POST",
+      url: "remove-inventory.json",
+      data: {
+        "ID": id
+      },
+      success: function(data) {
+        cb();
+      },
+      error: function (textStatus, errorThrown) {
+        alert("Could not remove inventory!");
+      }
+    });
+  }
 }
 
 function showpage(page) {
@@ -295,19 +290,15 @@ function showpage(page) {
   $("#page4").css("display", "none");
   if (page === 1) {
     $("#page1").css("display", "block");
-    console.log("page1")
   }
   else if (page === 2) {
     $("#page2").css("display", "block");
-    console.log("page2")
   }
   else if (page === 3) {
     $("#page3").css("display", "block");
-    console.log("page3")
   }
   else if (page === 4) {
     $("#page4").css("display", "block");
-    console.log("page4")
   }
   $(window).scrollTop(0);
 }
