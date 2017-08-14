@@ -29,7 +29,7 @@
           var OrderDate = obj["OrderDate"];
           var AdditonalNotes = obj["AdditonalNotes"];
           var buttonString = '<button id="remove_'+obj["ID"]+'">Remove</button>';
-        $("#invTable").append("<tr><td>"+FoodName+"</td><td>"+Count+"</td><td>"+FoodGroup+"</td><td>"+Description+"</td><td>"+DonorName+"</td><td>"+DonorOrganization+"</td><td>"+DonorPhone+"</td><td>"+DonorEmail+"</td><td>"+OrderDate+"</td><td>"+AdditonalNotes+"</td><td>"+buttonString+"</td></tr>");
+        $("#invTable").append("<tr><td>"+FoodName+"</td><td>"+Count+"</td><td>"+FoodGroup+"</td><td>"+Description+"</td><td>"+DonorName+"</td><td>"+DonorOrganization+"</td><td>"+DonorPhone+"</td><td>"+DonorEmail+"</td><td>"+OrderDate.substr(0,10)+"</td><td>"+AdditonalNotes+"</td><td>"+buttonString+"</td></tr>");
           $("#remove_"+obj["ID"]).click(function() {
             removeInventory(obj["ID"], function() {
                getInventory();
@@ -84,7 +84,7 @@
             else {
               color = "#8cfaa9";
             }
-            $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+orderDate+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+income+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td></tr>");
+            $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+orderDate.substr(0,10)+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+income+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td></tr>");
           }
           $("#packaged"+i).prop("checked", obj["PACKAGED"]);
           $("#packaged"+i).change(function() {
@@ -158,6 +158,10 @@ $(function() {
 
   // Press submit button emptys current form, and pushes entered data to database/table
   $("#submitButton").click(function() {
+    if (!$("#foodDate").datepicker("getDate")) {
+      alert("Must select date!");
+      return;
+    }
     $("#page1").css("display", "none");
     $("#page2").css("display", "block");
     var storeData = {
@@ -238,6 +242,10 @@ $(function() {
 //update when we call add item
 //put in pantry index
 function updateInventory() {
+  if (!$("#foodDate").datepicker("getDate")) {
+    alert("Must select date!");
+    return;
+  }
   $.ajax({
     type: "POST",
     url: "update-inventory.json",
@@ -321,6 +329,7 @@ function showpage(page) {
           <h1 id="formhead">Update Inventory</h1>
                 <label>Food Name<input type="text" name="foodName" id="foodName"/></label>
                 <label>Count<input type="text" name="foodCount" id="foodCount"/></label>
+                <label>Date<input type="date" name="foodDate" id="foodDate" /></label>
                 <label>Food Group</label>
                 <select id="foodCombo" name="field3">
                   <option value=""></option>
@@ -336,7 +345,6 @@ function showpage(page) {
                 <label>Donor Organization<input type="text" name="donorOrganization" id="donorOrganization"/></label>
                 <label>Donor Phone<input type="text" name="donorPhone" id="donorPhone"/></label>
                 <label>Donor Email<input type="text" name="donorEmail" id="donorEmail"/></label>
-                <label>Date<input type="date" name="foodDate" id="foodDate" /></label>
                 <label>Additonal Notes:<textarea name="foodNotes" id="foodNotes"></textarea></label>
              <input id="submitButton" type="submit" value="Add Item(s)" href="javascript:void(0)" onclick="updateInventory()"/>
         </div>
