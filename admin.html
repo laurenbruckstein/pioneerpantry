@@ -149,8 +149,11 @@ $(function() {
     beforeShowDay: function(date) {
       var today = new Date();
       today.setHours(0, 0, 0, 0);
-      if (date.getTime() >= today.getTime() && date.getDay() === 4) {
-        return [true, ""];
+      if (date.getTime() >= today.getTime()) {
+        var nextweek = new Date(date.getFullYear(), date.getMonth(), date.getDate()+7);
+        if (date.getDay() === 1 || date.getDay() === 3 || date.getDay() === 4 || (date.getDay() === 6 && date.getMonth() !== nextweek.getMonth())) {
+          return [true, ""];
+        }
       }
       return [false, ""];
     }
