@@ -5,6 +5,7 @@ var fs = require("fs");
 var port = process.argv[2] || 3000;
 var mysql = require("mysql");
 var qs = require("querystring");
+var credentials = require("../credentials");
 
 http.createServer(function(request, response) {
 
@@ -74,12 +75,7 @@ FROM `ORDER`, ORDER_ITEM, INVENTORY
 WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID;*/
 function joinOrderJson(request, response) {
   // TODO: load inventory from database
-  var connection = mysql.createConnection({
-    host     : "db.it.pointpark.edu",
-    user     : "foodpantry",
-    password : "f5gkaHeUXqTzL8kq",
-    database : "foodpantry"
-  });
+  var connection = mysql.createConnection(credentials.connection);
   connection.connect();
   connection.query("SELECT `ORDER`.ID, `ORDER`.STUDENT_ID, `ORDER`.DATE, `ORDER`.VETERAN, `ORDER`.DISABLED, `ORDER`.SNAP, `ORDER`.HOUSEHOLD, `ORDER`.PACKAGED, `ORDER`.PICKEDUP, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID ORDER BY `ORDER`.ID DESC", function(err, rows, fields) {
     var json = {};
@@ -102,12 +98,7 @@ function joinOrderJson(request, response) {
 
 function inventoryJson(request, response) {
   // TODO: load inventory from database
-  var connection = mysql.createConnection({
-    host     : "db.it.pointpark.edu",
-    user     : "foodpantry",
-    password : "f5gkaHeUXqTzL8kq",
-    database : "foodpantry"
-  });
+  var connection = mysql.createConnection(credentials.connection);
   connection.connect();
   connection.query("SELECT * FROM INVENTORY", function(err, rows, fields) {
     var json = {};
@@ -141,12 +132,7 @@ function updateInventoryJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
-      var connection = mysql.createConnection({
-        host     : "db.it.pointpark.edu",
-        user     : "foodpantry",
-        password : "f5gkaHeUXqTzL8kq",
-        database : "foodpantry"
-      });
+      var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       // THIS IS LINE 95 FROM NOTES
       connection.query("INSERT INTO INVENTORY (FoodName, Count, FoodGroup, Description, DonorName, DonorOrganization, DonorPhone, DonorEmail, OrderDate, AdditonalNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [json["FoodName"], json["Count"], json["FoodGroup"], json["Description"], json["DonorName"], json["DonorOrganization"], json["DonorPhone"], json["DonorEmail"], json["OrderDate"], json["AdditonalNotes"]], function(err, rows, fields) {
@@ -171,12 +157,7 @@ function updateInventoryJson(request, response) {
 // Order
 function orderJson(request, response) {
   // TODO: load inventory from database
-  var connection = mysql.createConnection({
-    host     : "db.it.pointpark.edu",
-    user     : "foodpantry",
-    password : "f5gkaHeUXqTzL8kq",
-    database : "foodpantry"
-  });
+  var connection = mysql.createConnection(credentials.connection);
   connection.connect();
   connection.query("SELECT * FROM foodpantry.ORDER", function(err, rows, fields) {
     var json = {};
@@ -211,12 +192,7 @@ function updateOrderJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
-      var connection = mysql.createConnection({
-        host     : "db.it.pointpark.edu",
-        user     : "foodpantry",
-        password : "f5gkaHeUXqTzL8kq",
-        database : "foodpantry"
-      });
+      var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       // THIS IS LINE 95 FROM NOTES
       console.log(JSON.stringify(json));
@@ -282,12 +258,7 @@ function updateOrderJson(request, response) {
 // Order Items
 // Order
 function itemJson(request, response) {
-  var connection = mysql.createConnection({
-    host     : "db.it.pointpark.edu",
-    user     : "foodpantry",
-    password : "f5gkaHeUXqTzL8kq",
-    database : "foodpantry"
-  });
+  var connection = mysql.createConnection(credentials.connection);
   connection.connect();
   connection.query("SELECT * FROM foodpantry.ORDER_ITEM", function(err, rows, fields) {
     var json = {};
@@ -321,12 +292,7 @@ function updateItemJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
-      var connection = mysql.createConnection({
-        host     : "db.it.pointpark.edu",
-        user     : "foodpantry",
-        password : "f5gkaHeUXqTzL8kq",
-        database : "foodpantry"
-      });
+      var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       console.log(JSON.stringify(json));
       var orderID = json["ID"];
@@ -369,12 +335,7 @@ function removeInventoryJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
-      var connection = mysql.createConnection({
-        host     : "db.it.pointpark.edu",
-        user     : "foodpantry",
-        password : "f5gkaHeUXqTzL8kq",
-        database : "foodpantry"
-      });
+      var connection = mysql.createConnection(credentials.connection);
       connection.connect();
 
       connection.query("DELETE FROM foodpantry.INVENTORY WHERE ID=?", [json["ID"]], function(err, rows, fields) {
@@ -410,12 +371,7 @@ function orderPackagedJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
-      var connection = mysql.createConnection({
-        host     : "db.it.pointpark.edu",
-        user     : "foodpantry",
-        password : "f5gkaHeUXqTzL8kq",
-        database : "foodpantry"
-      });
+      var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       connection.query("UPDATE foodpantry.`ORDER` SET PACKAGED=? WHERE ID=?", [json["Packaged"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
         console.log(err);
@@ -450,12 +406,7 @@ function orderPickedupJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
-      var connection = mysql.createConnection({
-        host     : "db.it.pointpark.edu",
-        user     : "foodpantry",
-        password : "f5gkaHeUXqTzL8kq",
-        database : "foodpantry"
-      });
+      var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       connection.query("UPDATE foodpantry.`ORDER` SET PICKEDUP=? WHERE ID=?", [json["Pickedup"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
         console.log(err);
