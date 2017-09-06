@@ -200,9 +200,9 @@ function updateOrderJson(request, response) {
       var orderDate = json["orderDate"];
       var phone = json["phone"];
       var email = json["email"];
-      var veteran = json["veteran"] ? 1 : 0;
-      var disabled = json["disabled"] ? 1 : 0;
-      var snap = json["snap"] ? 1 : 0;
+      var veteran = (typeof json["veteran"] === "boolean" && json["veteran"]) || json["veteran"] === "true" ? 1 : 0;
+      var disabled = (typeof json["disabled"] === "boolean" && json["disabled"]) || json["disabled"] === "true" ? 1 : 0;
+      var snap = (typeof json["snap"] === "boolean" && json["snap"]) || json["snap"] === "true" ? 1 : 0;
       var household = json["household"];
       var itemIDs = json["itemIDs[]"];
       if (!Array.isArray(itemIDs)) {
