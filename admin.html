@@ -44,7 +44,7 @@
 
   function getOrderTable() {
     $("#studentTable").empty();
-    $("#studentTable").append('<tr id="tableParent"><th>OrderID</th><th>Student_ID</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Income</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th></tr>');
+    $("#studentTable").append('<tr id="tableParent"><th>OrderID</th><th>Student_ID</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th></tr>');
     $.getJSON("join-order.json", function(data) {
       var color = "#8cfaa9";
       for (var i = 0; i < data["data"].length; i++) {
@@ -56,7 +56,6 @@
           var veteran = obj["VETERAN"];
           var disabled = obj["DISABLED"];
           var snap = obj["SNAP"];
-          var income = obj["INCOME"];
           var household = obj["HOUSEHOLD"];
           var foodGroup = obj["FoodGroup"];
           var foodName = obj["FoodName"];
@@ -84,7 +83,7 @@
             else {
               color = "#8cfaa9";
             }
-            $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+orderDate.substr(0,10)+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+income+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td></tr>");
+            $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+orderDate.substr(0,10)+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td></tr>");
           }
           $("#packaged"+i).prop("checked", obj["PACKAGED"]);
           $("#packaged"+i).change(function() {
@@ -372,7 +371,7 @@ function showpage(page) {
 
       <div id="page3" style="display:none">
         <table id="studentTable" >
-          <tr id="studentParent"><th>OrderID</th><th>Student_ID</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Income</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th></tr>
+          <tr id="studentParent"><th>OrderID</th><th>Student_ID</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th></tr>
       </table>
       </div>
 
