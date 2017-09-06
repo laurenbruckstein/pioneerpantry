@@ -114,12 +114,12 @@
     // TODO: iterate through groups and get IDs and put them in an array
     // use jQuery to retrieve selected IDs as was done in example above
     var itemIDs = [];
-    // Milk
-    if ($("#milk1ID").val() !== "None") {
-     itemIDs.push($("#milk1ID").children(":selected").attr("id"));
+    // Dairy
+    if ($("#dairy1ID").val() !== "None") {
+     itemIDs.push($("#dairy1ID").children(":selected").attr("id"));
     }
-    if ($("#milk2ID").val() !== "None") {
-     itemIDs.push($("#milk2ID").children(":selected").attr("id"));
+    if ($("#dairy2ID").val() !== "None") {
+     itemIDs.push($("#dairy2ID").children(":selected").attr("id"));
     }
     // Grains
     if ($("#grains1ID").val() !== "None") {
@@ -210,10 +210,10 @@
 
   $("#foodDate").change(function() {
     // clear existing options
-    $("#milk1ID").empty();
-    $("#milk1ID").append("<option>None</option>");
-    $("#milk2ID").empty();
-    $("#milk2ID").append("<option>None</option>");
+    $("#dairy1ID").empty();
+    $("#dairy1ID").append("<option>None</option>");
+    $("#dairy2ID").empty();
+    $("#dairy2ID").append("<option>None</option>");
     $("#grains1ID").empty();
     $("#grains1ID").append("<option>None</option>");
     $("#grains2ID").empty();
@@ -334,16 +334,16 @@ function showpage(page) {
                 <br>
                 <br>
                 <div id="page4" style="display: block">
-                <label id="groupTitle">Milk Group</label>
+                <label id="groupTitle">Dairy Group</label>
                 <label>Selection 1</label>
-                <div id="MilkGroupDiv">
-                <select id="milk1ID" name="milk1ID">
+                <div id="DairyGroupDiv">
+                <select id="dairy1ID" name="dairy1ID">
                   <option>None</option>
                 </select>
                 </div>
                 <label>Selection 2</label>
-                <div id="MilkGroupDiv">
-                <select id="milk2ID" name="milk2ID">
+                <div id="DairyGroupDiv">
+                <select id="dairy2ID" name="dairy2ID">
                   <option>None</option>
                 </select>
                 </div>
