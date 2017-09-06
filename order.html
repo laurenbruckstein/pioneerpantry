@@ -83,6 +83,15 @@
     }
 
   $("#submitButton").click(function() {
+    if (!$("#STUDENT_ID").val()) {
+      alert("Must enter student ID!");
+      return;
+    }
+    if (!$("#foodDate").datepicker("getDate")) {
+      alert("Must select date!");
+      return;
+    }
+    
     $("#page1").css("display", "block");
     var storeData = {
       "studentID": "",
@@ -309,8 +318,9 @@ function showpage(page) {
             <br>
       <div id="updateInventoryForm">
           <h1 id="formhead">Order Form</h1>
-                <label>Student ID No.<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
-                <label>Pickup Date<input type="text" name="foodDate" id="foodDate" /></label>
+                Fields with * are required.<br><br>
+                <label>Student ID No.*<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
+                <label>Pickup Date*<input type="text" name="foodDate" id="foodDate" /></label>
                 <label>Phone (For text updates)<input type="text" name="phone" id="phone"/></label>
                 <label>Email (For additional resources)<input type="text" name="dc" id="dc"/></label>
                 <br>
