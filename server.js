@@ -8,65 +8,79 @@ var qs = require("querystring");
 var credentials = require("../credentials");
 
 http.createServer(function(request, response) {
-
-  var uri = url.parse(request.url).pathname;
-  var filename = path.join(process.cwd(), uri);
-
-  fs.exists(filename, function(exists) {
-    if(!exists) {
-      if (uri === "/inventory.json") {
-        inventoryJson(request, response);
-      }
-      else if (uri === "/update-inventory.json") {
-        updateInventoryJson(request, response);
-      }
-      else if (uri === "/order.json") {
-        orderJson(request, response);
-      }
-      else if (uri === "/update-order.json") {
-        updateOrderJson(request, response);
-      }
-      else if (uri === "/item.json") {
-        itemJson(request, response);
-      }
-      else if (uri === "/update-item.json") {
-        updateItemJson(request, response);
-      }
-      else if (uri === "/remove-inventory.json") {
-        removeInventoryJson(request, response);
-      }
-      else if (uri === "/join-order.json") {
-        joinOrderJson(request, response);
-      }
-      else if (uri === "/order-packaged.json") {
-        orderPackagedJson(request, response);
-      }
-      else if (uri === "/order-pickedup.json") {
-        orderPickedupJson(request, response);
-      }
-      else {
-        response.writeHead(404, {"Content-Type": "text/plain"});
-        response.write("404 Not Found\n");
-        response.end();
-      }
-      return;
-    }
-
-    if (fs.statSync(filename).isDirectory()) filename += "/index.html";
-
-    fs.readFile(filename, "binary", function(err, file) {
-      if(err) {
-        response.writeHead(500, {"Content-Type": "text/plain"});
-        response.write(err + "\n");
-        response.end();
+  try {
+    var uri = url.parse(request.url).pathname;
+    var filename = path.join(process.cwd(), uri);
+    
+    fs.exists(filename, function(exists) {
+      if(!exists) {
+        if (uri === "/inventory.json") {
+          inventoryJson(request, response);
+        }
+        else if (uri === "/update-inventory.json") {
+          updateInventoryJson(request, response);
+        }
+        else if (uri === "/order.json") {
+          orderJson(request, response);
+        }
+        else if (uri === "/update-order.json") {
+          updateOrderJson(request, response);
+        }
+        else if (uri === "/item.json") {
+          itemJson(request, response);
+        }
+        else if (uri === "/update-item.json") {
+          updateItemJson(request, response);
+        }
+        else if (uri === "/remove-inventory.json") {
+          removeInventoryJson(request, response);
+        }
+        else if (uri === "/join-order.json") {
+          joinOrderJson(request, response);
+        }
+        else if (uri === "/order-packaged.json") {
+          orderPackagedJson(request, response);
+        }
+        else if (uri === "/order-pickedup.json") {
+          orderPickedupJson(request, response);
+        }
+        else {
+          response.writeHead(404, {"Content-Type": "text/plain"});
+          response.write("404 Not Found\n");
+          response.end();
+        }
         return;
       }
-
-      response.writeHead(200);
-      response.write(file, "binary");
-      response.end();
+      
+      if (fs.statSync(filename).isDirectory()) {
+        filename += "/index.html";
+      }
+      
+      fs.readFile(filename, "binary", function(err, file) {
+        if(err) {
+          response.writeHead(500, {"Content-Type": "text/plain"});
+          response.write(err + "\n");
+          response.end();
+          return;
+        }
+        
+        response.writeHead(200);
+        response.write(file, "binary");
+        response.end();
+      });
     });
-  });
+  }
+  catch (e) {
+    try {
+      console.log("ERROR(500): " + e);
+      response.writeHead(500, {"Content-Type": "text/plain"});
+      response.write("500 Internal Server error\n");
+      response.end();
+    }
+    catch (e) {
+      console.log("ERROR(^^^): " + e);
+    }
+  }
 }).listen(parseInt(port, 10));
 
 
