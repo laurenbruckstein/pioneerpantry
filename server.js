@@ -13,7 +13,8 @@ http.createServer(function(request, response) {
     var filename = path.join(process.cwd(), uri);
     
     fs.exists(filename, function(exists) {
-      if(!exists) {
+      if (!exists) {
+        console.log("uri: " + uri);
         if (uri === "/inventory.json") {
           inventoryJson(request, response);
         }
@@ -43,6 +44,9 @@ http.createServer(function(request, response) {
         }
         else if (uri === "/order-pickedup.json") {
           orderPickedupJson(request, response);
+        }
+        else if (uri === "/delete-order.json") {
+          deleteOrderJson(request, response);
         }
         else {
           response.writeHead(404, {"Content-Type": "text/plain"});
@@ -146,6 +150,7 @@ function updateInventoryJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
+      console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       // THIS IS LINE 95 FROM NOTES
@@ -206,10 +211,9 @@ function updateOrderJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
+      console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
-      // THIS IS LINE 95 FROM NOTES
-      console.log(JSON.stringify(json));
       var studentId = json["studentId"];
       var orderDate = json["orderDate"];
       var phone = json["phone"];
@@ -306,9 +310,9 @@ function updateItemJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
+      console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
-      console.log(JSON.stringify(json));
       var orderID = json["ID"];
       var itemID = json["itemIDs"];
       if (!Array.isArray(itemIDs)) {
@@ -317,7 +321,7 @@ function updateItemJson(request, response) {
       console.log("orderDate: " + orderDate);
       console.log("itemIDs: " + JSON.stringify(itemIDs));
       connection.query("INSERT INTO foodpantry.ORDER_ITEM (STUDENT_ID, DATE) VALUES (?, ?)", [json["studentId"], json["ID"]], function(err, rows, fields) {
-console.log(err);
+        console.log(err);
         var json = {};
         if (err) {
           json["success"] = false;
@@ -349,9 +353,9 @@ function removeInventoryJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
+      console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
-
       connection.query("DELETE FROM foodpantry.INVENTORY WHERE ID=?", [json["ID"]], function(err, rows, fields) {
         console.log(err);
         var json = {};
@@ -385,6 +389,7 @@ function orderPackagedJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
+      console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       connection.query("UPDATE foodpantry.`ORDER` SET PACKAGED=? WHERE ID=?", [json["Packaged"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
@@ -420,6 +425,7 @@ function orderPickedupJson(request, response) {
     });
     request.on("end", function () {
       var json = qs.parse(body);
+      console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       connection.query("UPDATE foodpantry.`ORDER` SET PICKEDUP=? WHERE ID=?", [json["Pickedup"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
@@ -442,4 +448,32 @@ function orderPickedupJson(request, response) {
   }
 }
 
+
+// Delete Order
+function deleteOrderJson(request, response) {
+  if (request.method === "POST") {
+    var body = "";
+    request.on("data", function (data) {
+      body += data;
+      // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
+      if (body.length > 1e6) {
+        // FLOOD ATTACK OR FAULTY CLIENT, NUKE REQUEST
+        request.connection.destroy();
+      }
+    });
+    request.on("end", function () {
+      var json = qs.parse(body);
+      console.log(JSON.stringify(json));
+      var connection = mysql.createConnection(credentials.connection);
+      connection.connect();
+      var id = json["ID"];
+      // check if order has not been processed yet
+      // increment values in order table
+      // delete row
+    });
+  }
+}
+
+
 console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+
