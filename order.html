@@ -48,6 +48,9 @@
           "EMAIL": $("#dc").val()
         },
         success: function(data) {
+          if (data && !data["success"]) {
+            alert(data["message"]);
+          }
         },
         error: function (textStatus, errorThrown) {
           alert("Could not update order!");
@@ -75,6 +78,9 @@
           "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
         },
         success: function(data) {
+          if (data && !data["success"]) {
+            alert(data["message"]);
+          }
         },
         error: function (textStatus, errorThrown) {
           alert("Could not update item!");
@@ -182,6 +188,9 @@
         "itemIDs": itemIDs
       },
       success: function(data) {
+        if (data && !data["success"]) {
+          alert(data["message"]);
+        }
         showpage(3);
       },
       error: function (textStatus, errorThrown) {
@@ -197,6 +206,9 @@
         "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
       },
       success: function(data) {
+        if (data && !data["success"]) {
+          alert(data["message"]);
+        }
       },
       error: function (textStatus, errorThrown) {
         alert("Could not update item!");
