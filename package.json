@@ -1,0 +1,26 @@
+{
+  "name": "pioneerpantry",
+  "version": "1.0.0",
+  "description": "This website would not have been possible without the efforts of Celina DiPietro, James Winyard, and Sergio Flores, who developed it for their CMPS 480 Senior Project course.",
+  "main": "server.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/markvoortman/pioneerpantry.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/markvoortman/pioneerpantry/issues"
+  },
+  "homepage": "https://github.com/markvoortman/pioneerpantry#readme",
+  "dependencies": {
+    "mysql": "^2.14.1"
+  }
+}
