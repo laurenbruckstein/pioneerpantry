@@ -11,7 +11,7 @@ http.createServer(function(request, response) {
   try {
     if (request.headers["x-authentication-key"] !== credentials.authentication.key) {
       response.writeHead(401, {"Content-Type": "text/plain"});
-      response.write("404 Unauthorized\n");
+      response.write("401 Unauthorized\n");
       response.end();
     }
     else {
