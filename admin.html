@@ -8,36 +8,92 @@
   <script src="jquery-ui/jquery-ui.min.js"></script>
   <meta charset="utf-8">
 <script>
-  // Jquery
-
-    var currentID = 0;
-    function getInventory() {
-      $("#invTable").empty();
-      $("#invTable").append('<tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Description</th><th id="colum">Donor Name</th><th >Donor Organization</th><th>Donor Phone</th><th>Donor Email</th><th id="colum">Date</th><th id="colum">Notes</th><th id="colum">Remove</th></tr>');
-    $.getJSON("inventory.json", function(data) {
-      for (var i = 0; i < data["data"].length; i++) {
-        (function(i) {
-          var obj = data["data"][i];
-          var FoodName = obj["FoodName"];
-          var Count = obj["Count"];
-          var FoodGroup = obj["FoodGroup"];
-          var Description = obj["Description"];
-          var DonorName = obj["DonorName"];
-          var DonorOrganization = obj["DonorOrganization"];
-          var DonorPhone = obj["DonorPhone"];
-          var DonorEmail = obj["DonorEmail"];
-          var OrderDate = obj["OrderDate"];
-          var AdditonalNotes = obj["AdditonalNotes"];
-          var buttonString = '<button id="remove_'+obj["ID"]+'">Remove</button>';
-        $("#invTable").append("<tr><td>"+FoodName+"</td><td>"+Count+"</td><td>"+FoodGroup+"</td><td>"+Description+"</td><td>"+DonorName+"</td><td>"+DonorOrganization+"</td><td>"+DonorPhone+"</td><td>"+DonorEmail+"</td><td>"+OrderDate.substr(0,10)+"</td><td>"+AdditonalNotes+"</td><td>"+buttonString+"</td></tr>");
-          $("#remove_"+obj["ID"]).click(function() {
-            removeInventory(obj["ID"], function() {
-               getInventory();
-              });
-            currentID = obj["ID"];
-          });
-        })(i);
+  
+  var INVENTORY = null;
+  var INVENTORY_SORT_BY = null;
+  var INVENTORY_SORT_BY_REVERSE = false;
+  
+  function showInventory() {
+    $("#invTable").empty();
+    var tr = $("<tr>");
+    $("#invTable").append(tr);
+    function addCol(label, name) {
+      var th = $("<th>");
+      tr.append(th)
+      if (!name) {
+        th.append(label);
       }
+      else {
+        var a = $("<a>");
+        th.append(a);
+        a.css("color", "black");
+        a.attr("href", "javascript:");
+        a.append(label);
+        a.click(function() {
+          if (INVENTORY_SORT_BY === name) {
+            INVENTORY_SORT_BY_REVERSE = !INVENTORY_SORT_BY_REVERSE;
+          }
+          else {
+            INVENTORY_SORT_BY = name;
+            INVENTORY_SORT_BY_REVERSE = false;
+          }
+          showInventory();
+        });
+      }
+    }
+    addCol("Food Name", "FoodName");
+    addCol("Count", "Count");
+    addCol("Food Group", "FoodGroup");
+    addCol("Description", "Description");
+    addCol("Donor Name", "DonorName");
+    addCol("Donor Organization", "DonorOrganization");
+    addCol("Donor Phone", "DonorPhone");
+    addCol("Donor Email", "DonorEmail");
+    addCol("Date", "OrderDate");
+    addCol("Expiration Date", "ExpirationDate");
+    addCol("Notes", "AdditionalNotes");
+    addCol("Remove");
+    var data = INVENTORY;
+    if (INVENTORY_SORT_BY) {
+      data.sort(function(x, y) {
+        if (INVENTORY_SORT_BY_REVERSE) {
+          var tmp = x;
+          x = y;
+          y = tmp;
+        }
+        return (""+x[INVENTORY_SORT_BY]).localeCompare((""+y[INVENTORY_SORT_BY]));
+      });
+    }
+    for (var i = 0; i < data.length; i++) {
+      (function(i) {
+        var obj = data[i];
+        var FoodName = obj["FoodName"];
+        var Count = obj["Count"];
+        var FoodGroup = obj["FoodGroup"];
+        var Description = obj["Description"];
+        var DonorName = obj["DonorName"];
+        var DonorOrganization = obj["DonorOrganization"];
+        var DonorPhone = obj["DonorPhone"];
+        var DonorEmail = obj["DonorEmail"];
+        var OrderDate = obj["OrderDate"];
+        var ExpirationDate = obj["ExpirationDate"] || "";
+        var AdditonalNotes = obj["AdditonalNotes"];
+        var buttonString = '<button id="remove_'+obj["ID"]+'">Remove</button>';
+        $("#invTable").append("<tr><td>"+FoodName+"</td><td>"+Count+"</td><td>"+FoodGroup+"</td><td>"+Description+"</td><td>"+DonorName+"</td><td>"+DonorOrganization+"</td><td>"+DonorPhone+"</td><td>"+DonorEmail+"</td><td>"+OrderDate.substr(0,10)+"</td><td>"+ExpirationDate.substr(0,10)+"</td><td>"+AdditonalNotes+"</td><td>"+buttonString+"</td></tr>");
+        $("#remove_"+obj["ID"]).click(function() {
+          removeInventory(obj["ID"], function() {
+            getInventory();
+          });
+        });
+      })(i);
+    }
+  }
+  
+  function getInventory() {
+    $("#invTable").empty();
+    $.getJSON("inventory.json", function(data) {
+      INVENTORY = data["data"];
+      showInventory();
     });
   }
   getInventory();
@@ -177,102 +233,8 @@
 
 $(function() {
   $("#foodDate").datepicker();
-  /*
-  $("#foodDate").datepicker({
-    beforeShowDay: function(date) {
-      var today = new Date();
-      today.setHours(0, 0, 0, 0);
-      if (date.getTime() >= today.getTime()) {
-        var nextweek = new Date(date.getFullYear(), date.getMonth(), date.getDate()+7);
-        if (date.getDay() === 1 || date.getDay() === 3 || date.getDay() === 4 || (date.getDay() === 6 && date.getMonth() !== nextweek.getMonth())) {
-          return [true, ""];
-        }
-      }
-      return [false, ""];
-    }
-  });
-  */
-  
-  // Press submit button emptys current form, and pushes entered data to database/table
-  $("#submitButton").click(function() {
-    if (!$("#foodDate").datepicker("getDate")) {
-      alert("Must select date!");
-      return;
-    }
-    $("#page1").css("display", "none");
-    $("#page2").css("display", "block");
-    var storeData = {
-      "foodName": "",
-      "foodCount": "",
-      "foodGroup": "",
-      "foodDescription": "",
-      "foodDonor": "",
-      "foodDonorContactOrganization": "",
-      "foodDonorContactPhone": "",
-      "foodDonorContactEmail": "",
-      "foodDate": "",
-      "foodNotes": ""
-    };
-    var foodName = $("#foodName").val();
-    var foodCount = $("#foodCount").val();
-    var foodGroup = $('input[name="frS"]:checked').val();
-    var foodDescription = $("#foodDescription").val();
-    var foodDonor = $("#foodDonor").val();
-    var foodDonorContactOrganization = $("#donorOrganization").val();
-    var foodDonorContactPhone = $("#donorPhone").val();
-    var foodDonorContactEmail = $("#donorEmail").val();
-    var foodDate = $("#foodDate").datepicker("getDate").toISOString().substr(0, 10);
-    var foodNotes = $("#foodNotes").val();
-    storeData.foodName = foodName;
-    storeData.foodCount = foodCount;
-    storeData.foodGroup = foodGroup;
-    storeData.foodDescription = foodDescription;
-    storeData.foodDonor = foodDonor;
-    storeData.foodDonorContactOrganization = foodDonorContactOrganization;
-    storeData.foodDonorContactPhone = foodDonorContactPhone;
-    storeData.foodDonorContactEmail = foodDonorContactEmail;
-    storeData.foodDate = foodDate;
-    storeData.foodNotes = foodNotes;
-
-     $("#foodNameL").val(foodName);
-     $("#foodCountL").val(foodCount);
-     $("#foodGroupL").val(foodGroup);
-     $("#descL").val(foodDescription);
-     $("#foodNameL").val(foodDonor);
-     $("#donorOrganization").val(foodDonorContactOrganization);
-     $("#donorPhone").val(foodDonorContactPhone);
-     $("#donorEmail").val(foodDonorContactEmail);
-     $("#foodDateL").val(foodDate);
-     $("#foodNotesL").val(foodNotes);
-
-     //Add to table
-     //Clear update inventory fields
-     $("#foodName").val("");
-     $("#foodCount").val("");
-     $("#field3").val("");
-     $("#field4").val("");
-     $("#foodDescription").val("");
-     $("#foodDonor").val("");
-     $("#donorOrganization").val("");
-     $("#donorPhone").val("");
-     $("#donorEmail").val("");
-     $("#foodDate").val("");
-     $("#foodNotes").val("");
-  });
-
-  $("#removeButton").click(function() {
-    $("#foodNameL").val("");
-    $("#foodCountL").val("");
-    $("#foodGroupL").val("");
-    $("#descL").val("");
-    $("#donorNameL").val("");
-    $("#field6L").val("");
-    $("#foodDateL").val("");
-    $("#foodNotesL").val("");
-    $("#field9L").val("");
-  });
+  $("#foodExpirationDate").datepicker();
 });
-
 
 
 
@@ -296,14 +258,28 @@ function updateInventory() {
       "DonorPhone": $("#donorPhone").val(),
       "DonorEmail": $("#donorEmail").val(),
       "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
+      "ExpirationDate": !$("#foodExpirationDate").datepicker("getDate") ? null : $("#foodExpirationDate").datepicker("getDate").toISOString().substr(0, 10),
       "AdditonalNotes": $("#foodNotes").val()
     },
     success: function(data) {
       if (data && !data["success"]) {
         alert(data["message"]);
       }
-      getInventory();
-      showpage(2);
+      else {
+        $("#foodName").val("");
+        $("#foodCount").val("");
+        $("#foodCombo").val("");
+        $("#foodDescription").val("");
+        $("#foodDonor").val("");
+        $("#donorOrganization").val("");
+        $("#donorPhone").val("");
+        $("#donorEmail").val("");
+        $("#foodDate").val("");
+        $("#foodExpirationDate").val("");
+        $("#foodNotes").val("");
+        getInventory();
+        showpage(2);
+      }
     },
     error: function (textStatus, errorThrown) {
       alert("Could not update inventory!");
@@ -373,6 +349,7 @@ function showpage(page) {
                 <label>Food Name<input type="text" name="foodName" id="foodName"/></label>
                 <label>Count<input type="text" name="foodCount" id="foodCount"/></label>
                 <label>Date When Available<input type="text" name="foodDate" id="foodDate" /></label>
+                <label>Expiration Date<input type="text" name="foodExpirationDate" id="foodExpirationDate" /></label>
                 <label>Food Group</label>
                 <select id="foodCombo" name="field3">
                   <option value=""></option>
@@ -396,12 +373,9 @@ function showpage(page) {
           <i><a href="about-this-website.html">&copy; 2017 About This Website</a></i><br><br>
         </div>
       </div>
-      <div id="page2" style="display:none;margin-left:-200px;">
+      <div id="page2" style="display:none;margin-left:-375px;">
         <button id="predictButton" href="javascript:void(0)" onclick="showpage(4)">Predictions</button>
-        <table id="invTable" >
-          <tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Description</th>
-          <th id="colum">Donor Name</th><th >Donor Organization</th><th>Donor Phone</th><th>Donor Email</th><th id="colum">Date</th><th id="colum">Notes</th><th id="colum">Remove</th></tr>
-      </table>
+        <table id="invTable"></table>
         <div id="footer">
           <i><a href="about-this-website.html">&copy; 2017 About This Website</a></i><br><br>
         </div>

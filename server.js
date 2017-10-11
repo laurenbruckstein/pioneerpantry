@@ -161,7 +161,7 @@ function updateInventoryJson(request, response) {
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
       // THIS IS LINE 95 FROM NOTES
-      connection.query("INSERT INTO INVENTORY (FoodName, Count, FoodGroup, Description, DonorName, DonorOrganization, DonorPhone, DonorEmail, OrderDate, AdditonalNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [json["FoodName"], json["Count"], json["FoodGroup"], json["Description"], json["DonorName"], json["DonorOrganization"], json["DonorPhone"], json["DonorEmail"], json["OrderDate"], json["AdditonalNotes"]], function(err, rows, fields) {
+      connection.query("INSERT INTO INVENTORY (FoodName, Count, FoodGroup, Description, DonorName, DonorOrganization, DonorPhone, DonorEmail, OrderDate, ExpirationDate, AdditonalNotes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [json["FoodName"], json["Count"], json["FoodGroup"], json["Description"], json["DonorName"], json["DonorOrganization"], json["DonorPhone"], json["DonorEmail"], json["OrderDate"], json["ExpirationDate"] || null, json["AdditonalNotes"]], function(err, rows, fields) {
         var json = {};
         if (err) {
           json["success"] = false;
