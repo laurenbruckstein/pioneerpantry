@@ -94,31 +94,43 @@ http.createServer(function(request, response) {
 }).listen(parseInt(port, 10));
 console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
 
-
-/*SELECT `ORDER`.STUDENT_ID, `ORDER`.DATE, INVENTORY.FoodGroup, INVENTORY.FoodName
-FROM `ORDER`, ORDER_ITEM, INVENTORY
-WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID;*/
 function joinOrderJson(request, response) {
   // TODO: load inventory from database
   var connection = mysql.createConnection(credentials.connection);
   connection.connect();
-  connection.query("SELECT `ORDER`.ID, `ORDER`.STUDENT_ID, `ORDER`.EMAIL, `ORDER`.DATE, `ORDER`.VETERAN, `ORDER`.DISABLED, `ORDER`.SNAP, `ORDER`.HOUSEHOLD, `ORDER`.PACKAGED, `ORDER`.PICKEDUP, `ORDER`.CANCELED, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID ORDER BY `ORDER`.ID DESC", function(err, rows, fields) {
-    var json = {};
+  var date = new Date();
+  var month = date.getMonth()+1;
+  var year = date.getFullYear();
+  connection.query("SELECT STUDENT_ID, COUNT(STUDENT_ID) AS ORDERS_THIS_MONTH FROM foodpantry.ORDER WHERE MONTH(DATE) = ? AND YEAR(DATE) = ? GROUP BY STUDENT_ID", [month, year], function(err, rows, fields) {
+    var id2count = {};
     if (err) {
-      json["success"] = false;
-      json["message"] = "Query failed: " + err;
+      console.log(err);
     }
     else {
-      //UNCOMMENT TO SEE ON WEBPAG
-      json["success"] = true;
-      json["message"] = "JOIN QUERY, Query successful";
-      json["data"] = rows;
+      for (var i = 0; i < rows.length; i++) {
+        id2count[rows[i]["STUDENT_ID"]] = rows[i]["ORDERS_THIS_MONTH"]
+      }
     }
-    response.writeHead(200, {"Content-Type": "text/json"});
-    response.write(JSON.stringify(json));
-    response.end();
+    connection.query("SELECT `ORDER`.ID, `ORDER`.STUDENT_ID, `ORDER`.EMAIL, `ORDER`.DATE, `ORDER`.VETERAN, `ORDER`.DISABLED, `ORDER`.SNAP, `ORDER`.HOUSEHOLD, `ORDER`.PACKAGED, `ORDER`.PICKEDUP, `ORDER`.CANCELED, INVENTORY.FoodGroup, INVENTORY.FoodName FROM `ORDER`, ORDER_ITEM, INVENTORY WHERE `ORDER`.ID = ORDER_ITEM.ORDER_ID AND ORDER_ITEM.INVENTORY_ID = INVENTORY.ID ORDER BY `ORDER`.ID DESC", function(err, rows, fields) {
+      var json = {};
+      if (err) {
+        json["success"] = false;
+        json["message"] = "Query failed: " + err;
+      }
+      else {
+        for (var i = 0; i < rows.length; i++) {
+          rows[i]["ORDERS_THIS_MONTH"] = id2count[rows[i]["STUDENT_ID"]] || 0;
+        }
+        json["success"] = true;
+        json["message"] = "JOIN QUERY, Query successful";
+        json["data"] = rows;
+      }
+      response.writeHead(200, {"Content-Type": "text/json"});
+      response.write(JSON.stringify(json));
+      response.end();
+    });
+    connection.end();
   });
-  connection.end();
 }
 
 function inventoryJson(request, response) {

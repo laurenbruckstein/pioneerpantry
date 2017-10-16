@@ -100,7 +100,7 @@
 
   function getOrderTable() {
     $("#studentTable").empty();
-    $("#studentTable").append('<tr id="tableParent"><th>OrderID</th><th>Student_ID</th><th>Email</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th><th>Canceled</th></tr>');
+    $("#studentTable").append('<tr id="tableParent"><th>OrderID</th><th>Student_ID</th><th>Email</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>OrdersThisMonth</th><th>Packaged</th><th>Pickedup</th><th>Canceled</th></tr>');
     $.getJSON("join-order.json", function(data) {
       var color = "#8cfaa9";
       for (var i = 0; i < data["data"].length; i++) {
@@ -116,6 +116,7 @@
           var household = obj["HOUSEHOLD"];
           var foodGroup = obj["FoodGroup"];
           var foodName = obj["FoodName"];
+          var ordersThisMonth = obj["ORDERS_THIS_MONTH"];
           var packaged = '<input id="packaged'+i+'" type="checkbox">';
           var pickup = '<input id="pickup'+i+'" type="checkbox">';
           var ordercanceled = "";
@@ -150,7 +151,7 @@
             else {
               color = "#8cfaa9";
             }
-            $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+email+"</td><td rowspan='"+rowspancnt+"'>"+orderDate.substr(0,10)+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td><td rowspan='"+rowspancnt+"'>"+ordercanceled+"</td></tr>");
+            $("#studentTable").append("<tr style='background-color:"+color+";'><td rowspan='"+rowspancnt+"'>"+orderID+"</td><td rowspan='"+rowspancnt+"'>"+studentID+"</td><td rowspan='"+rowspancnt+"'>"+email+"</td><td rowspan='"+rowspancnt+"'>"+orderDate.substr(0,10)+"</td><td rowspan='"+rowspancnt+"'>"+(veteran?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(disabled?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+(snap?"Yes":"No")+"</td><td rowspan='"+rowspancnt+"'>"+household+"</td><td>"+foodGroup+"</td><td>"+foodName+"</td><td rowspan='"+rowspancnt+"'>"+ordersThisMonth+"</td><td rowspan='"+rowspancnt+"'>"+packaged+"</td><td rowspan='"+rowspancnt+"'>"+pickup+"</td><td rowspan='"+rowspancnt+"'>"+ordercanceled+"</td></tr>");
           }
           $("#packaged"+i).prop("checked", obj["PACKAGED"]);
           if (obj["CANCELED"]) {
@@ -373,7 +374,7 @@ function showpage(page) {
           <i><a href="about-this-website.html">&copy; 2017 About This Website</a></i><br><br>
         </div>
       </div>
-      <div id="page2" style="display:none;margin-left:-375px;">
+      <div id="page2" style="display:none;margin-left:-150px;">
         <button id="predictButton" href="javascript:void(0)" onclick="showpage(4)">Predictions</button>
         <table id="invTable"></table>
         <div id="footer">
@@ -381,9 +382,9 @@ function showpage(page) {
         </div>
       </div>
 
-      <div id="page3" style="display:none;margin-left:-200px;">
+      <div id="page3" style="display:none;margin-left:-150px;">
         <table id="studentTable" >
-          <tr id="studentParent"><th>OrderID</th><th>Student_ID</th><th>Email</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>Packaged</th><th>Pickedup</th><th>Canceled</th></tr>
+          <tr id="studentParent"><th>OrderID</th><th>Student_ID</th><th>Email</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>OrdersThisMonth</th><th>Packaged</th><th>Pickedup</th><th>Canceled</th></tr>
       </table>
       </div>
 
