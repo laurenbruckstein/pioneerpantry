@@ -5,7 +5,7 @@ var fs = require("fs");
 var port = process.argv[2] || 3000;
 var mysql = require("mysql");
 var qs = require("querystring");
-var credentials = require("../credentials");
+var credentials = require("./credentials");
 
 http.createServer(function(request, response) {
   try {
