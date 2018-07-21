@@ -101,7 +101,7 @@ function joinOrderJson(request, response) {
   var date = new Date();
   var month = date.getMonth()+1;
   var year = date.getFullYear();
-  connection.query("SELECT STUDENT_ID, COUNT(STUDENT_ID) AS ORDERS_THIS_MONTH FROM foodpantry.ORDER WHERE MONTH(DATE) = ? AND YEAR(DATE) = ? GROUP BY STUDENT_ID", [month, year], function(err, rows, fields) {
+  connection.query("SELECT STUDENT_ID, COUNT(STUDENT_ID) AS ORDERS_THIS_MONTH FROM `ORDER` WHERE MONTH(DATE) = ? AND YEAR(DATE) = ? GROUP BY STUDENT_ID", [month, year], function(err, rows, fields) {
     var id2count = {};
     if (err) {
       console.log(err);
@@ -197,7 +197,7 @@ function orderJson(request, response) {
   // TODO: load inventory from database
   var connection = mysql.createConnection(credentials.connection);
   connection.connect();
-  connection.query("SELECT * FROM foodpantry.ORDER", function(err, rows, fields) {
+  connection.query("SELECT * FROM `ORDER`", function(err, rows, fields) {
     var json = {};
     if (err) {
       json["success"] = false;
@@ -251,7 +251,7 @@ function updateOrderJson(request, response) {
       console.log("email: " + email);
       console.log("These are the items in the order: ")
       console.log("itemIDs: " + JSON.stringify(itemIDs));
-      connection.query("INSERT INTO foodpantry.ORDER (STUDENT_ID, DATE, PHONE, EMAIL, VETERAN, DISABLED, SNAP, HOUSEHOLD) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [studentId, orderDate, phone, email, veteran, disabled, snap, household], function(err, rows, fields) {
+      connection.query("INSERT INTO `ORDER` (STUDENT_ID, DATE, PHONE, EMAIL, VETERAN, DISABLED, SNAP, HOUSEHOLD) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", [studentId, orderDate, phone, email, veteran, disabled, snap, household], function(err, rows, fields) {
         var json = {};
         if (err) {
           console.log(err);
@@ -264,7 +264,7 @@ function updateOrderJson(request, response) {
           console.log("ORDER ID: " + rows.insertId);
           var ncomplete = 0;
           for (var i = 0; i < itemIDs.length; i++) {
-            connection.query("INSERT INTO foodpantry.ORDER_ITEM (ORDER_ID, INVENTORY_ID) VALUES (?, ?)", [rows["insertId"], itemIDs[i]], function(err, rows, fields) {
+            connection.query("INSERT INTO ORDER_ITEM (ORDER_ID, INVENTORY_ID) VALUES (?, ?)", [rows["insertId"], itemIDs[i]], function(err, rows, fields) {
               if (err) {
                 console.log(err);
               }
@@ -276,7 +276,7 @@ function updateOrderJson(request, response) {
                 response.end();
               }
             });
-            connection.query("UPDATE foodpantry.INVENTORY SET Count = Count - 1 WHERE ID = ?", [itemIDs[i]], function(err, rows, fields) {
+            connection.query("UPDATE INVENTORY SET Count = Count - 1 WHERE ID = ?", [itemIDs[i]], function(err, rows, fields) {
               if (err) {
                 console.log(err);
               }
@@ -301,7 +301,7 @@ function updateOrderJson(request, response) {
 function itemJson(request, response) {
   var connection = mysql.createConnection(credentials.connection);
   connection.connect();
-  connection.query("SELECT * FROM foodpantry.ORDER_ITEM", function(err, rows, fields) {
+  connection.query("SELECT * FROM ORDER_ITEM", function(err, rows, fields) {
     var json = {};
     if (err) {
       json["success"] = false;
@@ -343,7 +343,7 @@ function updateItemJson(request, response) {
       }
       console.log("orderDate: " + orderDate);
       console.log("itemIDs: " + JSON.stringify(itemIDs));
-      connection.query("INSERT INTO foodpantry.ORDER_ITEM (STUDENT_ID, DATE) VALUES (?, ?)", [json["studentId"], json["ID"]], function(err, rows, fields) {
+      connection.query("INSERT INTO ORDER_ITEM (STUDENT_ID, DATE) VALUES (?, ?)", [json["studentId"], json["ID"]], function(err, rows, fields) {
         var json = {};
         if (err) {
           console.log(err);
@@ -379,7 +379,7 @@ function removeInventoryJson(request, response) {
       console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
-      connection.query("DELETE FROM foodpantry.INVENTORY WHERE ID=?", [json["ID"]], function(err, rows, fields) {
+      connection.query("DELETE FROM INVENTORY WHERE ID=?", [json["ID"]], function(err, rows, fields) {
         var json = {};
         if (err) {
           console.log(err);
@@ -415,7 +415,7 @@ function orderPackagedJson(request, response) {
       console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
-      connection.query("UPDATE foodpantry.`ORDER` SET PACKAGED=? WHERE ID=?", [json["Packaged"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
+      connection.query("UPDATE `ORDER` SET PACKAGED=? WHERE ID=?", [json["Packaged"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
         var json = {};
         if (err) {
           console.log(err);
@@ -451,7 +451,7 @@ function orderPickedupJson(request, response) {
       console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
       connection.connect();
-      connection.query("UPDATE foodpantry.`ORDER` SET PICKEDUP=? WHERE ID=?", [json["Pickedup"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
+      connection.query("UPDATE `ORDER` SET PICKEDUP=? WHERE ID=?", [json["Pickedup"]==="true"?1:0, json["OrderID"]], function(err, rows, fields) {
         var json = {};
         if (err) {
           console.log(err);
@@ -550,7 +550,7 @@ function cancelOrderJson(req, res) {
             else {
               // update the canceled field
               var nquery = 1;
-              connection.query("UPDATE foodpantry.`ORDER` SET CANCELED=1 WHERE ID=?", [json["ORDER_ID"]], function(err, rows, fields) {
+              connection.query("UPDATE `ORDER` SET CANCELED=1 WHERE ID=?", [json["ORDER_ID"]], function(err, rows, fields) {
                 nquery--;
                 checkNextStep(req, res, connection, err, nquery);
               });
