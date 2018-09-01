@@ -53,7 +53,17 @@
     addCol("Expiration Date", "ExpirationDate");
     addCol("Notes", "AdditionalNotes");
     addCol("Remove");
-    var data = INVENTORY;
+    var data = INVENTORY.filter(function(item) {
+      var date = new Date();
+      date.setMonth(date.getMonth() - 1);
+      var datestr = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+      if (item.Count > 0 || item.OrderDate > datestr) {
+        return true;
+      }
+      else {
+        return false;
+      }
+    });
     if (INVENTORY_SORT_BY) {
       data.sort(function(x, y) {
         if (INVENTORY_SORT_BY_REVERSE) {
