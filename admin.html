@@ -13,6 +13,14 @@
   var INVENTORY_SORT_BY = null;
   var INVENTORY_SORT_BY_REVERSE = false;
   
+  function prependZero(str) {
+    str = "" + str;
+    if (str.length === 1) {
+      str = "0" + str;
+    }
+    return str;
+  }
+  
   function showInventory() {
     $("#invTable").empty();
     var tr = $("<tr>");
@@ -53,10 +61,10 @@
     addCol("Expiration Date", "ExpirationDate");
     addCol("Notes", "AdditionalNotes");
     addCol("Remove");
+    var date = new Date();
+    date.setMonth(date.getMonth() - 1);
+    var datestr = date.getFullYear() + "-" + prependZero(date.getMonth()) + "-" + prependZero(date.getDate());
     var data = INVENTORY.filter(function(item) {
-      var date = new Date();
-      date.setMonth(date.getMonth() - 1);
-      var datestr = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
       if (item.Count > 0 || item.OrderDate > datestr) {
         return true;
       }
@@ -112,6 +120,18 @@
     $("#studentTable").empty();
     $("#studentTable").append('<tr id="tableParent"><th>OrderID</th><th>Student_ID</th><th>Email</th><th>OrderDate</th><th>Veteran</th><th>Disabled</th><th>SNAP</th><th>Household</th><th>FoodGroup</th><th>FoodName</th><th>OrdersThisMonth</th><th>Packaged</th><th>Pickedup</th><th>Canceled</th></tr>');
     $.getJSON("join-order.json", function(data) {
+      var date = new Date();
+      date.setMonth(date.getMonth() - 3);
+      var datestr = date.getFullYear() + "-" + prependZero(date.getMonth()) + "-" + prependZero(date.getDate());
+      data.data = data.data.filter(function(item) {
+        if (item.DATE > datestr) {
+          return true;
+        }
+        else {
+          return false;
+        }
+      });
+      
       var color = "#8cfaa9";
       for (var i = 0; i < data["data"].length; i++) {
         (function(i) {
