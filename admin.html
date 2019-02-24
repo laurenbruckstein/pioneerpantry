@@ -264,7 +264,7 @@
 
 $(function() {
   $("#foodDate").datepicker();
-  $("#foodExpirationDate").datepicker();
+  //$("#foodExpirationDate").datepicker();
 });
 
 
@@ -289,7 +289,7 @@ function updateInventory() {
       "DonorPhone": $("#donorPhone").val(),
       "DonorEmail": $("#donorEmail").val(),
       "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
-      "ExpirationDate": !$("#foodExpirationDate").datepicker("getDate") ? null : $("#foodExpirationDate").datepicker("getDate").toISOString().substr(0, 10),
+      "ExpirationDate": null,//!$("#foodExpirationDate").datepicker("getDate") ? null : $("#foodExpirationDate").datepicker("getDate").toISOString().substr(0, 10),
       "AdditonalNotes": $("#foodNotes").val()
     },
     success: function(data) {
@@ -306,7 +306,7 @@ function updateInventory() {
         $("#donorPhone").val("");
         $("#donorEmail").val("");
         $("#foodDate").val("");
-        $("#foodExpirationDate").val("");
+        //$("#foodExpirationDate").val("");
         $("#foodNotes").val("");
         getInventory();
         showpage(2);
@@ -380,7 +380,7 @@ function showpage(page) {
                 <label>Food Name<input type="text" name="foodName" id="foodName"/></label>
                 <label>Count<input type="text" name="foodCount" id="foodCount"/></label>
                 <label>Date When Available<input type="text" name="foodDate" id="foodDate" /></label>
-                <label>Expiration Date<input type="text" name="foodExpirationDate" id="foodExpirationDate" /></label>
+                <!--<label>Expiration Date<input type="text" name="foodExpirationDate" id="foodExpirationDate" /></label>-->
                 <label>Food Group</label>
                 <select id="foodCombo" name="field3">
                   <option value=""></option>
