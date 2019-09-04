@@ -17,7 +17,7 @@
         today.setHours(0, 0, 0, 0);
         if (date.getTime() >= today.getTime()) {
           //var nextweek = new Date(date.getFullYear(), date.getMonth(), date.getDate()+7);
-          if (date.getDay() === 2 || date.getDay() === 3) {
+          if (date.getDay() === 1 || date.getDay() === 3 || date.getDay() === 4) {
             return [true, ""];
           }
         }
