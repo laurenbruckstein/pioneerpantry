@@ -282,12 +282,12 @@
         var foodName = item.FoodName;
         if (item.Count >= 1) {
           var option = $("<option id='" + item.ID + "'>");
-          $("#"+foodGroup.toLowerCase()+"1ID").append(option);
+          $("#"+foodGroup.toLowerCase().replace(/ /g, "")+"1ID").append(option);
           option.append(foodName);
         }
         if (item.Count >= 2) {
           var option = $("<option id='" + item.ID + "'>");
-          $("#"+foodGroup.toLowerCase()+"2ID").append(option);
+          $("#"+foodGroup.toLowerCase().replace(/ /g, "")+"2ID").append(option);
           option.append(foodName);
         }
       }
