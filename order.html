@@ -97,6 +97,18 @@
       alert("Must select date!");
       return;
     }
+    if (!$("#phone").val()) {
+      alert("Must enter phone number!");
+      return;
+    }
+    if (!$("#dc").val()) {
+      alert("Must enter Point Park email!");
+      return;
+    }
+    if ($("#dc").val().toLowerCase().indexOf("@pointpark.edu") === -1) {
+      alert("Please enter your Point Park email!");
+      return;
+    }
     
     $("#page1").css("display", "block");
     var storeData = {
@@ -345,8 +357,8 @@ function showpage(page) {
                 Fields with * are required.<br><br>
                 <label>Student ID No.*<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
                 <label>Pickup Date*<input type="text" name="foodDate" id="foodDate" /></label>
-                <label>Phone (For text updates)<input type="text" name="phone" id="phone"/></label>
-                <label>Email (For additional resources)<input type="text" name="dc" id="dc"/></label>
+                <label>Phone*<input type="text" name="phone" id="phone"/></label>
+                <label>Point Park Email*<input type="text" name="dc" id="dc"/></label>
                 <br>
                 <label>Are you:<input id="veteran" type="checkbox">Veteran&nbsp;&nbsp;&nbsp;<input id="disabled" type="checkbox">Legally Disabled&nbsp;&nbsp;&nbsp;<input id="SNAP" type="checkbox">SNAP Recipient</label>
                 <br>
@@ -481,7 +493,7 @@ function showpage(page) {
           <h1 id="formhead">Order Placed!</h1>
           <label>Student ID No.<input readonly type="text" name="STUDENT_ID" id="provided_ID"/></label>
           <label>Pickup Date<input readonly type="text" name="foodDate" id="provided_Date" /></label>
-          <label>Contact Info (For additional resources)<input readonly type="text" name="dc" id="provided_Contact"/></label>
+          <label>Contact Info<input readonly type="text" name="dc" id="provided_Contact"/></label>
           <br>
           <div id="endNotes">
             <label>If you have any questions or concerns, please email <u>pioneerpantry@pointpark.edu</u>
