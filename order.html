@@ -24,7 +24,7 @@
         return [false, ""];
       }
     });
-    
+
     $.getJSON("order.json", function(data) {
       for (var i = 0; i < data["data"].length; i++) {
         var obj = data["data"][i];
@@ -109,7 +109,7 @@
       alert("Please enter your Point Park email!");
       return;
     }
-    
+
     $("#page1").css("display", "block");
     var storeData = {
       "studentID": "",
@@ -203,7 +203,11 @@
         "disabled": $("#disabled").is(":checked"),
         "snap": $("#SNAP").is(":checked"),
         "income": $("#incomeCombo").val(),
-        "household": $("#household").val(),
+        "household-Male": $("#household-Male").val(),
+        "household-Female": $("#household-Female").val(),
+        "household-Neither": $("#household-Neither").val(),
+        "household-NoDisclosure": $("#household-NoDisclosure").val(),
+        "household-Age": $("#household-Age").val(),
         "itemIDs": itemIDs
       },
       success: function(data) {
@@ -329,10 +333,17 @@ function showpage(page) {
   }
 }
 
+function setHouseholdMembers(){
+  males = document.getElementById('household-Male').value;
+  females = document.getElementById('household-Female').value;
+  neither = document.getElementById('household-Neither').value;
+  noDisclosures = document.getElementById('household-NoDisclosure').value;
+  householdMembers = males+females+neither+noDisclosures; 
+}
+
 
 //update when we call add item
 //put in pantry index
-
 
 </script>
 </head>
@@ -354,72 +365,198 @@ function showpage(page) {
             <br>
       <div id="updateInventoryForm">
           <h1 id="formhead">Order Form</h1>
+
+          <!--Get Basic Customer Information-->
+
                 Fields with * are required.<br><br>
-                <label>Student ID No.*<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
+                <label>Last 4 digits of your 2P Number* (This is the number on your panther card)<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
                 <label>Pickup Date*<input type="text" name="foodDate" id="foodDate" /></label>
                 <label>Phone*<input type="text" name="phone" id="phone"/></label>
-                <label>Point Park Email*<input type="text" name="dc" id="dc"/></label>
+                <label>Pitt Email*<input type="text" name="dc" id="dc"/></label>
                 <br>
                 <label>Are you:<input id="veteran" type="checkbox">Veteran&nbsp;&nbsp;&nbsp;<input id="disabled" type="checkbox">Legally Disabled&nbsp;&nbsp;&nbsp;<input id="SNAP" type="checkbox">SNAP Recipient</label>
                 <br>
-                  <label>How many people do you live with?</label>
-                  <select id="household">
-                      <option value=""></option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                    </select>
+
+          <!--Get Household Gender Information-->
+
+                <label>The following two questions apply to all members of your household. This includes you and any family members, spouses, or other dependents. It does not include roommates.</label>
+                <br>
+                <label>How many of your household members identify with each the following genders? If the answer is zero, please type "0": </label>
+                <br><br>
+                    <label>Male:</label>
+                    <select id="household-Male">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    <label>Female:</label>
+                    <select id="household-Female">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    <label>Neither of These:</label>
+                    <select id="household-Neither">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    <label>Prefer Not to Disclose:</label>
+                    <select id="household-NoDisclosure">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                <br><br>
+
+          <!--Get Household Age Information-->
+
+                <label>How many of your household members fall into each of the following age ranges in years? If the answer is zero, please write "0": </label>
+                <br><br>
+                    <label>0-5</label>
+                    <select id="household-Age">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
+                    <label>6-12</label>
+                    <select id="household-Age">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
+                    <label>13-17</label>
+                    <select id="household-Age">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
+                    <label>18-34</label>
+                    <select id="household-Age">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
+                    <label>35-59</label>
+                    <select id="household-Age">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
+                    <label>60+</label>
+                    <select id="household-Age">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
+
+
                 <br>
                 <br>
                 <br>
+
+          <!--Product Selection-->
+
                 <div id="page4" style="display: block">
-                <label id="groupTitle">Dairy Group</label>
+
+            <!--PB&J Selection-->
+                <label id="groupTitle">PB&J</label>
                 <label>Selection 1</label>
                 <div id="DairyGroupDiv">
                 <select id="dairy1ID" name="dairy1ID">
                   <option>None</option>
+                  <option>Peanut Butter</option>
+                  <option>Jelly</option>
                 </select>
                 </div>
+
                 <label>Selection 2</label>
                 <div id="DairyGroupDiv">
                 <select id="dairy2ID" name="dairy2ID">
                   <option>None</option>
+                  <option>Peanut Butter</option>
+                  <option>Jelly</option>
                 </select>
                 </div>
-                <label id="groupTitle">Grains Group</label>
+                <br>
+
+          <!--Cereal Selection-->
+                <label id="groupTitle">Cereal</label>
+
                 <label>Selection 1</label>
                 <div id="grainGroupDiv">
                 <select id="grains1ID" name="grains1ID">
                   <option>None</option>
                 </select>
                 </div>
+
                 <label>Selection 2</label>
                 <div id="grainGroupDiv">
                 <select id="grains2ID" name="grains2ID">
                   <option>None</option>
                 </select>
                 </div>
-                <label id="groupTitle">Protein Group</label>
+                <br>
+
+          <!--Beverage Selection-->
+                <label id="groupTitle">Beverages</label>
+
                 <label>Selection 1</label>
                 <div id="proteinGroupDiv">
                 <select id="protein1ID" name="protein1ID">
                   <option>None</option>
                 </select>
                 </div>
+
                 <label>Selection 2</label>
                 <div id="proteinGroupDiv">
                 <select id="protein2ID" name="protein2ID">
                   <option>None</option>
                 </select>
                 </div>
-                <label id="groupTitle">Fruit Group</label>
+                <br>
+
+
+            <!--Fruit Selection-->
+                <label id="groupTitle">Fruits</label>
                 <label>Selection 1</label>
                 <div id="fruitGroupDiv">
                 <select id="fruit1ID" name="Fruit1ID">
@@ -432,7 +569,10 @@ function showpage(page) {
                   <option>None</option>
                 </select>
                 </div>
-                <label id="groupTitle">Vegetable Group</label>
+                <br>
+
+            <!--Vegetable Selection-->
+                <label id="groupTitle">Vegetables</label>
                 <label>Selection 1</label>
                 <div id="vegetableGroupDiv">
                 <select id="vegetable1ID" name="Vegetable1ID">
@@ -445,7 +585,10 @@ function showpage(page) {
                   <option>None</option>
                 </select>
                 </div>
-                <label id="groupTitle">Personal Care Items Group</label>
+                <br>
+
+            <!--Beans and Canned Protein-->
+                <label id="groupTitle">Beans and Canned Protein</label>
                 <label>Selection 1</label>
                 <div id="personalCareItemsGroupDiv">
                 <select id="personalcareitems1ID" name="PersonalCareItems1ID">
@@ -458,7 +601,10 @@ function showpage(page) {
                   <option>None</option>
                 </select>
                 </div>
-                <label id="groupTitle">Other</label>
+                <br>
+
+            <!--Rice and Potatos-->
+                <label id="groupTitle">Rice and Potatos</label>
                 <label>Selection 1</label>
                 <div id="otherGroupDiv">
                 <select id="other1ID" name="other1ID">
@@ -472,6 +618,170 @@ function showpage(page) {
                 </select>
                 </div>
                 <br>
+
+          <!--Pasta and Sauce-->
+                <label id="groupTitle">Pasta and Sauce</label>
+                <label>Selection 1</label>
+                <div id="otherGroupDiv">
+                <select id="other1ID" name="other1ID">
+                    <option>None</option>
+                </select>
+                </div>
+                <div id="otherGroupDiv">
+                <label>Selection 2</label>
+                <select id="other2ID" name="other2ID">
+                      <option>None</option>
+                </select>
+                </div>
+                <br>
+
+        <!--Prepared Pasta-->
+              <label id="groupTitle">Prepared Pasta</label>
+              <label>Selection 1</label>
+              <div id="otherGroupDiv">
+              <select id="other1ID" name="other1ID">
+                  <option>None</option>
+              </select>
+              </div>
+              <div id="otherGroupDiv">
+              <label>Selection 2</label>
+              <select id="other2ID" name="other2ID">
+                    <option>None</option>
+              </select>
+              </div>
+              <br>
+
+      <!--Soup-->
+              <label id="groupTitle">Soup</label>
+              <label>Selection 1</label>
+              <div id="otherGroupDiv">
+              <select id="other1ID" name="other1ID">
+                  <option>None</option>
+              </select>
+              </div>
+              <div id="otherGroupDiv">
+              <label>Selection 2</label>
+              <select id="other2ID" name="other2ID">
+                    <option>None</option>
+              </select>
+              </div>
+              <br>
+
+      <!--Snacks-->
+            <label id="groupTitle">Snacks</label>
+            <label>Selection 1</label>
+            <div id="otherGroupDiv">
+            <select id="other1ID" name="other1ID">
+                <option>None</option>
+            </select>
+            </div>
+            <div id="otherGroupDiv">
+            <label>Selection 2</label>
+            <select id="other2ID" name="other2ID">
+                  <option>None</option>
+            </select>
+            </div>
+            <br>
+
+      <!--Oral Hygiene-->
+            <label id="groupTitle">Oral Hygiene</label>
+            <label>Selection 1</label>
+            <div id="otherGroupDiv">
+            <select id="other1ID" name="other1ID">
+                <option>None</option>
+            </select>
+            </div>
+            <div id="otherGroupDiv">
+            <label>Selection 2</label>
+            <select id="other2ID" name="other2ID">
+                  <option>None</option>
+            </select>
+            </div>
+            <br>
+
+      <!--Paper Products-->
+            <label id="groupTitle">Paper Products</label>
+            <label>Selection 1</label>
+            <div id="otherGroupDiv">
+            <select id="other1ID" name="other1ID">
+                <option>None</option>
+            </select>
+            </div>
+            <div id="otherGroupDiv">
+            <label>Selection 2</label>
+            <select id="other2ID" name="other2ID">
+                  <option>None</option>
+            </select>
+            </div>
+            <br>
+
+      <!--Shower-->
+            <label id="groupTitle">Shower</label>
+            <label>Selection 1</label>
+            <div id="otherGroupDiv">
+            <select id="other1ID" name="other1ID">
+                <option>None</option>
+            </select>
+            </div>
+            <div id="otherGroupDiv">
+            <label>Selection 2</label>
+            <select id="other2ID" name="other2ID">
+                  <option>None</option>
+            </select>
+            </div>
+            <br>
+
+    <!--Household-->
+          <label id="groupTitle">Household</label>
+          <label>Selection 1</label>
+          <div id="otherGroupDiv">
+          <select id="other1ID" name="other1ID">
+              <option>None</option>
+          </select>
+          </div>
+          <div id="otherGroupDiv">
+          <label>Selection 2</label>
+          <select id="other2ID" name="other2ID">
+                <option>None</option>
+          </select>
+          </div>
+          <br>
+
+
+      <!--Menstrual Products-->
+            <label id="groupTitle">Menstrual Products</label>
+            <label>Selection 1</label>
+            <div id="otherGroupDiv">
+            <select id="other1ID" name="other1ID">
+                <option>None</option>
+            </select>
+            </div>
+            <div id="otherGroupDiv">
+            <label>Selection 2</label>
+            <select id="other2ID" name="other2ID">
+                  <option>None</option>
+            </select>
+            </div>
+            <br>
+
+      <!--Miscellaneous Hygiene-->
+            <label id="groupTitle">Miscellaneous Hygiene</label>
+            <label>Selection 1</label>
+            <div id="otherGroupDiv">
+            <select id="other1ID" name="other1ID">
+                <option>None</option>
+            </select>
+            </div>
+            <div id="otherGroupDiv">
+            <label>Selection 2</label>
+            <select id="other2ID" name="other2ID">
+                  <option>None</option>
+            </select>
+            </div>
+            <br>
+
+
+
              <input id="submitButton" type="submit" value="Submit Order" href="javascript:void(0)" onclick=""/>
            </div>
           </div>
