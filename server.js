@@ -60,11 +60,11 @@ http.createServer(function(request, response) {
           }
           return;
         }
-        
+
         if (fs.statSync(filename).isDirectory()) {
           filename += "/index.html";
         }
-        
+
         fs.readFile(filename, "binary", function(err, file) {
           if(err) {
             response.writeHead(500, {"Content-Type": "text/plain"});
@@ -72,7 +72,7 @@ http.createServer(function(request, response) {
             response.end();
             return;
           }
-          
+
           response.writeHead(200);
           response.write(file, "binary");
           response.end();
@@ -228,7 +228,7 @@ function updateOrderJson(request, response) {
         request.connection.destroy();
       }
     });
-    request.on("end", function () {
+    request.on("end", function () {   //extract fields from browser here and store in variables 
       var json = qs.parse(body);
       console.log(JSON.stringify(json));
       var connection = mysql.createConnection(credentials.connection);
@@ -571,4 +571,3 @@ function cancelOrderJson(req, res) {
     });
   }
 }
-

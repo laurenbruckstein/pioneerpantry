@@ -1,0 +1,502 @@
+<!doctype html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="student.css">
+  <link rel="stylesheet" type="text/css" href="student.css">
+  <link rel="stylesheet" type="text/css" href="jquery-ui/jquery-ui.min.css">
+  <link href="orderPage.html">
+  <title style="text-align:center">Pitt Food Pantry</title>
+  <script src="jquery-3.1.1.min.js"></script>
+  <script src="jquery-ui/jquery-ui.min.js"></script>
+  <meta charset="utf-8">
+<script>
+
+
+  $(function() {
+    $("#foodDate").datepicker({
+      beforeShowDay: function(date) {
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (date.getTime() >= today.getTime()) {
+          return [true, ""];
+          //if (date.getDay() === 1 || date.getDay() === 3 || date.getDay() === 4) {
+          //  return [true, ""];
+          //}
+        }
+        return [false, ""];
+      }
+    });
+
+    $.getJSON("order.json", function(data) {
+      for (var i = 0; i < data["data"].length; i++) {
+        var obj = data["data"][i];
+        var Student_ID = obj["STUDENT_ID"];
+        var OrderDate = obj["OrderDate"];
+        var phone = obj["PHONE"];
+        var email = obj["EMAIL"];
+        $("#studentTable").append("<tr><td>"+Student_ID+"</td><td>"+OrderDate+"</td></tr>");
+      }
+    });
+
+    // UPDATE ORDER
+    function updateOrder() {
+      $.ajax({
+        type: "POST",
+        url: "update-order.json",
+        data: {
+          "STUDENT_ID": $("#STUDENT_ID").val(),
+          "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
+          "PHONE": $("#phone").val(),
+          "EMAIL": $("#dc").val()
+        },
+        success: function(data) {
+          if (data && !data["success"]) {
+            alert(data["message"]);
+          }
+        },
+        error: function (textStatus, errorThrown) {
+          alert("Could not update order!");
+        }
+      });
+    }
+
+    // Order Items
+    $.getJSON("item.json", function(data) {
+      for (var i = 0; i < data["data"].length; i++) {
+        var obj = data["data"][i];
+        var Order_ID = obj["Order_ID"];
+        var Item_ID = obj["Item_ID"];
+        $("#studentTable").append("<tr><td>"+Order_ID+"</td><td>"+Item_ID+"</td></tr>");
+      }
+    });
+
+
+  $("#submitButton").click(function() {
+    if (!$("#STUDENT_ID").val()) {
+      alert("Must enter student ID!");
+      return;
+    }
+    if (!$("#foodDate").datepicker("getDate")) {
+      alert("Must select date!");
+      return;
+    }
+    if (!$("#phone").val()) {
+      alert("Must enter phone number!");
+      return;
+    }
+    if (!$("#dc").val()) {
+      alert("Must enter Pitt email!");
+      return;
+    }
+    if ($("#dc").val().toLowerCase().indexOf("@pitt.edu") === -1) {
+      alert("Please enter your Pitt Park email!");
+      return;
+    }
+
+    $("#page1").css("display", "block");
+    var storeData = {
+      "studentID": "",
+      "foodCount": "",
+      "studentID": "",
+      "foodType": "",
+      "foodDescription": "",
+      "foodDonor": "",
+      "foodDonorContact": "",
+      "foodDonorPhone": "",
+      "foodDate": "",
+    };
+    var studentID = $("#STUDENT_ID").val();
+    var foodGroup = $('input[name="frS"]:checked').val();
+    var foodDescription = $("#field5").val();
+    var foodCount = $("#field2").val();
+    var foodDonor = $("#field6").val();
+    var foodDonorPhone = $("#phone").val();
+    var foodDonorContact = $("#dc").val();
+    var foodDate = $("#foodDate").datepicker("getDate").toISOString().substr(0, 10);
+    storeData.studentID = studentID;
+    storeData.foodDate = foodDate;
+
+    // OLD PLACEORDER FUNCTION
+    // Front End
+    //showpage(3);
+    //alert("Order Placed!");
+
+    // Back end
+    $.ajax({
+      type: "POST",
+      url: "update-order.json",
+      data: {
+        "studentId": $("#STUDENT_ID").val(),
+        "orderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10),
+        "phone": $("#phone").val(),
+        "email": $("#dc").val(),
+        "veteran": $("#veteran").is(":checked"),
+        "disabled": $("#disabled").is(":checked"),
+        "snap": $("#SNAP").is(":checked"),
+        "income": $("#incomeCombo").val(),
+        "household-Male": $("#household-Male").val(),
+        "household-Female": $("#household-Female").val(),
+        "household-Neither": $("#household-Neither").val(),
+        "household-NoDisclosure": $("#household-NoDisclosure").val(),
+        "household-Age": $("#household-Age").val(),
+        "itemIDs": itemIDs
+      },
+      success: function(data) {
+        if (data && !data["success"]) {
+          alert(data["message"]);
+        }
+        showpage(3);
+      },
+      error: function (textStatus, errorThrown) {
+        alert("Could not place order!");
+      }
+    });
+/*
+    $.ajax({
+      type: "POST",
+      url: "update-item.json",
+      data: {
+        "STUDENT_ID": $("#STUDENT_ID").val(),
+        "OrderDate": $("#foodDate").datepicker("getDate").toISOString().substr(0, 10)
+      },
+      success: function(data) {
+        if (data && !data["success"]) {
+          alert(data["message"]);
+        }
+      },
+      error: function (textStatus, errorThrown) {
+        alert("Could not update item!");
+      }
+    });
+*/
+
+
+
+      $("#tableParent").parent().append("<tr><td>" + $("#STUDENT_ID").val() + "</td><td>" + $("#field2").val() + "</td>" +
+      "<td>" + $("#field3").val() + "</td><td>" + $("#field4").val() + "</td><td>" + $("#field5").val() + "</td><td>" +
+       $("#field6").val() + "</td><td>" + $("#foodDate").val() + "</td><td>" + $("#field8").val() + "</tr>");
+
+       // Order Placed Form/parent
+      $("#provided_ID").val($("#STUDENT_ID").val());
+      $("#provided_Date").val($("#foodDate").val());
+      $("#provided_Contact").val($("#dc").val());
+  });
+
+
+  $("#foodDate").change(function() {
+    // clear existing options
+    $("#dairy1ID").empty();
+    $("#dairy1ID").append("<option>None</option>");
+    $("#dairy2ID").empty();
+    $("#dairy2ID").append("<option>None</option>");
+    $("#grains1ID").empty();
+    $("#grains1ID").append("<option>None</option>");
+    $("#grains2ID").empty();
+    $("#grains2ID").append("<option>None</option>");
+    $("#protein1ID").empty();
+    $("#protein1ID").append("<option>None</option>");
+    $("#protein2ID").empty();
+    $("#protein2ID").append("<option>None</option>");
+    $("#fruit1ID").empty();
+    $("#fruit1ID").append("<option>None</option>");
+    $("#fruit2ID").empty();
+    $("#fruit2ID").append("<option>None</option>");
+    $("#vegetable1ID").empty();
+    $("#vegetable1ID").append("<option>None</option>");
+    $("#vegetable2ID").empty();
+    $("#vegetable2ID").append("<option>None</option>");
+    $("#personalcareitems1ID").empty();
+    $("#personalcareitems1ID").append("<option>None</option>");
+    $("#personalcareitems2ID").empty();
+    $("#personalcareitems2ID").append("<option>None</option>");
+    $("#other1ID").empty();
+    $("#other1ID").append("<option>None</option>");
+    $("#other2ID").empty();
+    $("#other2ID").append("<option>None</option>");
+    $.getJSON("inventory.json", function(data) {
+      var matches = [];
+      for (var i = 0; i < data["data"].length; i++) {
+        var item = data["data"][i];
+        if (item.OrderDate.substr(0, 10) <= $("#foodDate").datepicker("getDate").toISOString().substr(0, 10) &&
+            (!item.ExpirationDate || $("#foodDate").datepicker("getDate").toISOString().substr(0, 10) <= item.ExpirationDate.substr(0, 10))) {
+          matches.push(item);
+        }
+      }
+      // TODO: build food group sections including select buttons
+      for (var i = 0; i < matches.length; i++) {
+        var item = matches[i];
+        var foodGroup = item.FoodGroup;
+        var foodName = item.FoodName;
+        if (item.Count >= 1) {
+          var option = $("<option id='" + item.ID + "'>");
+          $("#"+foodGroup.toLowerCase().replace(/ /g, "")+"1ID").append(option);
+          option.append(foodName);
+        }
+        if (item.Count >= 2) {
+          var option = $("<option id='" + item.ID + "'>");
+          $("#"+foodGroup.toLowerCase().replace(/ /g, "")+"2ID").append(option);
+          option.append(foodName);
+        }
+      }
+    });
+  });
+
+});
+
+
+function showpage(page) {
+  $("#page1").css("display", "none");
+  $("#page2").css("display", "none");
+  $("#page3").css("display", "none");
+  $("#page4").css("display", "none");
+  if (page === 1) {
+    $("#page1").css("display", "block");
+  }
+  else if (page === 2) {
+    $("#page1").css("display", "none");
+  }
+  else if (page === 3) {
+    $("#page3").css("display", "block");
+  }
+  else if (page === 4) {
+    $("#page1").css("display", "block");
+    $("#page4").css("display", "block");
+  }
+}
+
+function sethouseHoldMembers(){
+  males = document.getElementById('household-Male').value;
+  females = document.getElementById('household-Female').value;
+  neither = document.getElementById('household-Neither').value;
+  noDisclosures = document.getElementById('household-NoDisclosure').value;
+  houseHoldMembers = males+females+neither+noDisclosures;
+}
+
+
+//update when we call add item
+//put in pantry index
+
+</script>
+</head>
+<body>
+  <div id="container">
+    <div id="content">
+      <a href="."><img id="logo" style="width:210px;" src="PantryLogo.png" alt="Pioneer Pantry Logo"></a>
+      <div id="main">
+        <div id="page1">
+          <p id="instructions">
+              You may use the Pioneer Pantry online ordering system<br>
+              two times per calendar month at no cost.<br>
+              <br>
+              Select up to 10 items by using the drop down menus below.<br>
+              Pioneer Pantry recommends  that you select items from multiple food groups<br>
+              but please feel free to select food that you will eat.<br>
+              Select "none" in all remaining drop down menus after selecting up to 10 items.<br>
+            </p>
+            <br>
+      <div id="updateInventoryForm">
+          <h1 id="formhead">Order Form</h1>
+          <h2 id="formhead">Customer Information</h2>
+          <br><br>
+
+          <!--Get Basic Customer Information-->
+                Fields with * are required.<br><br>
+                <label>Last 4 digits of your 2P Number* (This is the number on your panther card)<input type="text" name="STUDENT_ID" id="STUDENT_ID"/></label>
+                <label>Pickup Date*<input type="text" name="foodDate" id="foodDate" /></label>
+                <label>Phone*<input type="text" name="phone" id="phone"/></label>
+                <label>Pitt Email*<input type="text" name="dc" id="dc"/></label>
+                <br>
+                <label>Are you:<input id="veteran" type="checkbox">Veteran&nbsp;&nbsp;&nbsp;<input id="disabled" type="checkbox">Legally Disabled&nbsp;&nbsp;&nbsp;<input id="SNAP" type="checkbox">SNAP Recipient</label>
+                <br>
+
+          <!--Get Household Gender Information-->
+                <br>
+                <label>The following two questions apply to all members of your household. This includes you and any family members, spouses, or other dependents. It does not include roommates.</label>
+                <br><br>
+                <label>How many of your household members identify with each the following genders? If the answer is zero, please type "0": </label>
+                <br>
+                    <label>Male:</label>
+                    <select id="household-Male">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    <label>Female:</label>
+                    <select id="household-Female">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    <label>Neither of These:</label>
+                    <select id="household-Neither">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                    <label>Prefer Not to Disclose:</label>
+                    <select id="household-NoDisclosure">
+                        <option value=""></option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                      </select>
+                <br><br>
+
+          <!--Get Household Age Information-->
+                <br>
+                <label>How many of your household members fall into each of the following age ranges in years? If the answer is zero, please write "0": </label>
+                <br>
+                    <label>0-5</label>
+                    <select id="household-Age">
+                      <option value=""></option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      </select>
+                    <label>6-12</label>
+                    <select id="household-Age">
+                      <option value=""></option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      </select>
+                    <label>13-17</label>
+                    <select id="household-Age">
+                      <option value=""></option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      </select>
+                    <label>18-34</label>
+                    <select id="household-Age">
+                      <option value=""></option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      </select>
+                    <label>35-59</label>
+                    <select id="household-Age">
+                      <option value=""></option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      </select>
+                    <label>60+</label>
+                    <select id="household-Age">
+                      <option value=""></option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                      <option value="9">9</option>
+                      <option value="10">10</option>
+                      </select>
+                <br>
+                <br>
+                <br>
+
+             <input id="submitButton" type="submit" value="Next Page >>" href="orderPage2.html" onclick=""/>
+           </div>
+          </div>
+        <div id="footer">
+          <i><a href="about.html">&copy; 2017-2021 About This Website</a></i><br><br>
+        </div>
+      </div>
+      <div id="page2" style="display:none">
+        <table id="invTable" >
+
+          <tr id="tableParent"><th >Food Name</th><th id="colum">Count</th><th id="colum">Food Group</th><th id="colum">Food Type</th>
+          <th id="colum">Desc.</th><th id="colum">Donor</th><th id="colum">Date</th><th id="colum">Notes</th></tr>
+          <!--<tr id="tableParent"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>-->
+      </table>
+      </div>
+      <div id="page3" style="display:none">
+        <div id="updateInventoryForm">
+          <br>
+          <h1 id="formhead">Order Placed!</h1>
+          <label>Student ID No.<input readonly type="text" name="STUDENT_ID" id="provided_ID"/></label>
+          <label>Pickup Date<input readonly type="text" name="foodDate" id="provided_Date" /></label>
+          <label>Contact Info<input readonly type="text" name="dc" id="provided_Contact"/></label>
+          <br>
+          <div id="endNotes">
+            <label>If you have any questions or concerns, please email <u>pioneerpantry@pointpark.edu</u>
+            <br><br><b>Please bring your Point Park University ID to pick up food order.
+            <br><br>NOTE: Please note students are not allowed to pick up food for other students.</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
